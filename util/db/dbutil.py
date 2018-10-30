@@ -97,17 +97,20 @@ class RedisDb(object):
         self.port = config['Redis_port']
         self.pwd = config['Redis_pwd']
         self.db = config['Redis_db']
+        self.redis_db = redis.Redis(host=self.host, port=self.port, decode_responses=True, password=self.pwd, db=self.db)  # 连接Redis数据库
 
     def get_code(self, name, key):
         self.logger.info('### Redis查询参数  name:{0};key:{1}  ###'.format(name, key))
-        redis_db = redis.Redis(host=self.host, port=self.port, decode_responses=True, password=self.pwd, db=self.db)  # 连接Redis数据库
-        code = redis_db.hget(name=name, key=key)  # 获取Hash类型数据
+        code = self.redis_db.hget(name=name, key=key)  # 获取Hash类型数据
         return re.findall('\d+', code)[0]
 
     def get_key(self, name):
-        redis_db = redis.Redis(host=self.host, port=self.port, decode_responses=True)
-        txt = redis_db.hgetall(name)
+        txt = self.redis_db.hgetall(name)
         return txt
+
+    def del_key(self, name, key):
+        if
+        self.redis_db.hdel(name, key)
 
 if __name__ == '__main__':
     test = RedisDb()
