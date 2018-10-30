@@ -1,18 +1,0 @@
-2018-08-10 16:35:02,367 - root - ERROR - Failed device connection...
-2018-08-10 16:35:02,368 - root - ERROR - Message: An unknown server-side error occurred while processing the command. Original error: [100%] /data/local/tmp/UnicodeIME-debug.apk
-C:\Users\dell\AppData\Local\Programs\Appium\resources\app\node_modules\appium\node_modules\appium-android-ime\bin\UnicodeIME-debug.apk: 1 file pushed. 1.3 MB/s (36795 bytes in 0.028s)
-	Origin path:/data/local/tmp/UnicodeIME-debug.apk
-	Target path:/data/bbkcore/pmInstallAppTemp/UnicodeIME-debug.apk 
-	Create_Path:/data/bbkcore/pmInstallAppTemp/UnicodeIME-debug.apk 
-	ToFile:/data/bbkcore/pmInstallAppTemp/UnicodeIME-debug.apk
-Failure [INSTALL_FAILED_UPDATE_INCOMPATIBLE]
-
-2018-08-10 16:38:22,219 - root - ERROR - Failed device connection...
-2018-08-10 16:38:22,222 - root - ERROR - Message: An unknown server-side error occurred while processing the command. Original error: [100%] /data/local/tmp/UnicodeIME-debug.apk
-C:\Users\dell\AppData\Local\Programs\Appium\resources\app\node_modules\appium\node_modules\appium-android-ime\bin\UnicodeIME-debug.apk: 1 file pushed. 2.2 MB/s (36795 bytes in 0.016s)
-	Origin path:/data/local/tmp/UnicodeIME-debug.apk
-	Target path:/data/bbkcore/pmInstallAppTemp/UnicodeIME-debug.apk 
-	Create_Path:/data/bbkcore/pmInstallAppTemp/UnicodeIME-debug.apk 
-	ToFile:/data/bbkcore/pmInstallAppTemp/UnicodeIME-debug.apk
-Failure [INSTALL_FAILED_UPDATE_INCOMPATIBLE]
-

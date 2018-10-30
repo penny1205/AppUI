@@ -1,6 +1,0 @@
-2018-10-11 11:11:27,317 - root - ERROR - list index out of range
-2018-10-11 11:13:46,315 - root - ERROR - Can't convert 'dict' object to str implicitly
-2018-10-11 17:56:19,033 - root - ERROR - Can not find the element by  com.mustang:id/addcard_cardNo
-2018-10-11 17:56:29,058 - root - ERROR - Can not find the element by  com.mustang:id/addcard_mobile
-2018-10-11 17:56:39,096 - root - ERROR - Can not find the element by  com.mustang:id/chekbox
-2018-10-11 17:56:49,161 - root - ERROR - Can not find the element by  com.mustang:id/add_card_sure
