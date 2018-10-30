@@ -109,8 +109,12 @@ class RedisDb(object):
         return txt
 
     def del_key(self, name, key):
-        if
-        self.redis_db.hdel(name, key)
+        if key == 'all':
+            keys = self.redis_db.hkeys(name)
+            for hash_key in keys:
+                self.redis_db.hdel(name, hash_key)
+        else:
+            self.redis_db.hdel(name, key)
 
 if __name__ == '__main__':
     test = RedisDb()

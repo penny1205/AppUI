@@ -22,7 +22,6 @@ class TestLogout(unittest.TestCase):
         config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
         app_package = config['appPackage_chezhu']
         app_activity = config['appActivity_chezhu']
-        self.device = config[]
         # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
         self.logger = Log()
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
