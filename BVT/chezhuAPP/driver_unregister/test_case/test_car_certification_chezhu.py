@@ -8,14 +8,14 @@ from util.file.fileutil import FileUtil
 from BVT.common.db_operation import DbOperation
 from page_object.chezhu.chezhu_common.main_tab_chezhu import MainTabCheZhu
 from page_object.chezhu.chezhu_userCenter.personCenter_chezhu import PersonCenterCheZhu
-from page_object.chezhu.chezhu_userCenter.certification_chezhu import CertificationCheZhu
 from page_object.chezhu.chezhu_common.choose_photo_chezhu import ChoosePhotoCheZhu
 from page_object.chezhu.chezhu_userCenter.car_certificate_chezhu import CarCertificateCheZhu
+from page_object.chezhu.chezhu_userCenter.wallet_open_chezhu import WalletOpenCheZhu
 from util.driver.driver import AppUiDriver
 
 
-class TestCertification(unittest.TestCase):
-    """凯京车主APP 身份认证"""
+class TestCarCertification(unittest.TestCase):
+    """凯京车主APP 车辆认证"""
 
     def setUp(self):
         """前置条件准备"""
@@ -29,35 +29,33 @@ class TestCertification(unittest.TestCase):
         self.mobile = config['mobile_unregister']
         self.name = config['name_unregister']
         self.idNo = config['idNo_unregister']
-        self.db.initialize_driver_info(self.mobile)
+        self.db.update_driver_info(self.mobile, self.idNo, self.name)
         self.driver.start_activity(app_activity=app_activity, app_package=app_package)
-        self.logger.info('########################### TestCertification START ###########################')
+        self.logger.info('########################### TestCarCertification START ###########################')
         pass
 
     def tearDown(self):
         """测试环境重置"""
         self.db.initialize_driver_info(self.mobile)
-        self.logger.info('########################### TestCertification END ###########################')
+        self.logger.info('########################### TestCarCertification END ###########################')
         pass
 
-    def test_bvt_certification(self):
-        """身份认证"""
-        certificate = CertificationCheZhu(self.driver)
+    def test_bvt_car_certification(self):
+        """车辆认证"""
+        car_certificate = CarCertificateCheZhu(self.driver)
         choosePhoto = ChoosePhotoCheZhu(self.driver)
         MainTabCheZhu(self.driver).goto_person_center()
         PersonCenterCheZhu(self.driver).goto_certification_page()
-        certificate.upload_card_front()
-        choosePhoto.choose_id_card_front()
-        certificate.upload_card_back()
+        car_certificate.upload_car_img_first()
+        choosePhoto.choose_driving_license_front()
+        car_certificate.upload_car_img_second()
         choosePhoto.choose_id_card_back()
-        certificate.input_id_card_info(self.name, self.idNo)
-        certificate.submit_id_card_info()
-        CarCertificateCheZhu(self.driver).wait_page()
+        car_certificate.input_car_number()
+        car_certificate.choose_car_info()
+        car_certificate.submit_car_info()
+        WalletOpenCheZhu(self.driver).wait_page()
         driver_info = self.db.select_driver_info(self.mobile)
-        self.assertEqual(self.name, driver_info['name'])
-        self.assertEqual(self.idNo, str(driver_info['idNo']))
-        self.assertEqual('Y', driver_info['isCertifacate'])
-        self.assertEqual('0', str(driver_info['AuthFlag']))
+        self.assertEqual('Y', driver_info['isCarCertifacate'])
 
 
 if __name__ == '__main__':
