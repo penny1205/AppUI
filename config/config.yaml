@@ -1,0 +1,51 @@
+### device config ###
+platformName: Android
+platformVersion: 6.0.1
+deviceName: ad6decf
+
+
+### wuliuyun app ###
+appPackage_wuliuyun: com.luchang.lcgc
+appActivity_wuliuyun: .main.SplashActivity
+username_wuliuyun: weibo
+password_wuliuyun: 111111
+partnerNo: WeiBo
+# Special loan
+username_specialLoan: zxcs001
+password_specialLoan: 111111
+
+### chezhu app ###
+appPackage_chezhu: com.mustang
+appActivity_chezhu: .account.SplashActivity
+
+### register ###
+mobile_register: 18655148783
+
+### unregister ###
+mobile_unregister: 18000001111
+name_unregister: 完颜瑞星
+idNo_unregister: 412725198407038239
+
+
+### Log path ###
+log_path_info: \log
+log_path_error: \log\error
+
+### DB config ###
+Mysql_host: rm-uf68z8q234b903503jo.mysql.rds.aliyuncs.com
+Mysql_port: 3306
+Mysql_user: keking_uat
+Mysql_passwd: keking@2018#hfUAT
+Mysql_dbname: YDAPPDB
+Mysql_charset: utf8
+
+#########Redis Config###########
+Redis_host: 101.132.155.132
+Redis_port: 6379
+Redis_pwd: KeKing684d
+Redis_db: 1
+### api-config ###
+app_api_host: http://bj.uapi.yudianbank.com:8080
+app_api_path: /app
+app_api_YD_OAUTH: eyJlbmNyeXB0ZWREYXRhIjoiSXF1VVZqSndZYXJrL2YxL1pQZmxRT2FBYkNJWDYwOXBtQTE2SDR1K0NuR1ozWU5jcEE3anltTWphWWZEUjZkdTM1SXZGc0M0eWxCRTBKV2R1Z0Q3SzJPblFZZHJaWDdWRWFaWTR5cFJrY1hxRU1uK0dqNzJ4dTRVK1RRdjhRK3Q1QWwwdUVtcW9wTE05VThJZGkrRDBFeEdTc1RGNlQxcy80d2YxaXFMTkhDMldCV2t1MXZLcmZYeFRlV1p6VjZrK3E2eGtCU05jTDlEUGFHeXRJNnc0QXNnN2U4OGlxZVJiSndEeHc4SGtjOFZ5S3JKZFA5MDByZEd1QXdNZ2FYeXE4OXFtTENVSStiWXQ1RkU5dlI0SjAyNG1NTmxnVmNhdjB2cWVTRmRNMzdwS0VnWWFNbE9HUy9tWEhvWDF6d3Nlak5xdEpUMnZpbGw1MjNSUG4vblFnPT0iLCJ3cmFwcGVkS2V5IjoiamFTK0lISmxTVDV4VHZJT3BsRm9lOVlzVEJiR2c2SmMvdExhZXdRazYzcUV3NHZVd3djU0M3L29venMvL0p0THhVMG8xMnYwdlBjSUJTa21IemVuRkE9PSJ9
+

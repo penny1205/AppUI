@@ -1,0 +1,21 @@
+2018-08-07 16:15:02,623 - root - ERROR - Can not find the element by  com.mustang:id/account_setting
+2018-08-07 16:15:33,735 - root - ERROR - Can not find the element by  com.mustang:id/logout_button
+2018-08-07 16:17:22,959 - root - ERROR - Failed device connection...
+2018-08-07 16:17:22,963 - root - ERROR - Message: A new session could not be created. Details: Problem getting session data for driver type AndroidDriver; does it implement 'get driverData'?
+
+2018-08-07 16:18:36,717 - root - ERROR - Can not find the element by  com.mustang:id/account_setting
+2018-08-07 16:20:27,286 - root - ERROR - Can not find the element by  com.mustang:id/account_setting
+2018-08-07 16:29:04,919 - root - ERROR - Can not find the element by  com.mustang:id/account_setting
+2018-08-07 16:30:16,276 - root - ERROR - Can not find the element by  com.mustang:id/account_setting
+2018-08-07 16:30:47,353 - root - ERROR - Can not find the element by  com.mustang:id/logout_button
+2018-08-07 16:31:39,388 - root - ERROR - Failed device connection...
+2018-08-07 16:31:39,391 - root - ERROR - Message: A new session could not be created. Details: Problem getting session data for driver type AndroidDriver; does it implement 'get driverData'?
+
+2018-08-07 17:15:46,961 - root - ERROR - Can not find the element by  com.mustang: id / dialog_sure
+2018-08-07 17:16:11,055 - root - ERROR - Failed device connection...
+2018-08-07 17:16:11,057 - root - ERROR - Message: A new session could not be created. Details: Problem getting session data for driver type AndroidDriver; does it implement 'get driverData'?
+
+2018-08-07 17:17:26,145 - root - ERROR - Can not find the element by  ccom.mustang:id/dialog_sure
+2018-08-07 17:35:52,829 - root - ERROR - Failed device connection...
+2018-08-07 17:35:52,831 - root - ERROR - Message: A new session could not be created. Details: Problem getting session data for driver type AndroidDriver; does it implement 'get driverData'?
+
