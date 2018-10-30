@@ -36,6 +36,31 @@ class DbOperation(object):
               ' and `source`=\'register\')'.format(mobile)
         self.db.execute_sql(sql)
 
+    def update_driver_info(self):
+        custId = self.config['custId_unregister']
+        mobile = self.config['mobile_unregister']
+        name = self.config['name_unregister']
+        idNo = self.config['idNo_unregister']
+        sql = 'UPDATE `YD_APP_USER` SET `carNo`=NULL, `idNo`={0}, `name`=\'{1}\', `portraitId`=NULL, `coreLoginId`={0},' \
+              ' `custId`={2}, `isCarCertificate`=NULL, `isCardBindFlag`=NULL, `isCertifacate`=\'Y\', `portrait`=NULL,' \
+              ' `pyAuthFlag`=\'0\', `pyAuthResult`=NULL, `clientId`=NULL, `introducerPhone`=NULL WHERE (`mobile`={3}' \
+              ' and `source`=\'register\')'.format(idNo, name, custId, mobile)
+        self.db.execute_sql(sql)
+
+    def certificate_driver_info(self):
+        custId = self.config['custId_unregister']
+        mobile = self.config['mobile_unregister']
+        name = self.config['name_unregister']
+        idNo = self.config['idNo_unregister']
+        sql = 'UPDATE `YD_APP_USER` SET `carNo`=\'皖A12345\', `idNo`={0}, `name`=\'{1}\', `portraitId`=NULL, `coreLoginId`={0},' \
+              ' `custId`={2}, `isCarCertificate`=\'Y\', `isCardBindFlag`=NULL, `isCertifacate`=\'Y\', `portrait`=NULL,' \
+              ' `pyAuthFlag`=\'0\', `pyAuthResult`=NULL, `clientId`=NULL, `introducerPhone`=NULL WHERE (`mobile`={3}' \
+              ' and `source`=\'register\')'.format(idNo, name, custId, mobile)
+        self.db.execute_sql(sql)
+
+    def select_wallet_info(self, loginId):
+        sql = ''
 
 if __name__ == '__main__':
-    user = DbOperation().initialize_driver_info('18056070532')
+    user = DbOperation().update_driver_info( '18000001111', '412725198407038239', '完颜瑞星')
+

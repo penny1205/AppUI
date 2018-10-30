@@ -26,10 +26,7 @@ class TestCarCertification(unittest.TestCase):
         self.logger = Log()
         self.db = DbOperation()
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
-        self.mobile = config['mobile_unregister']
-        self.name = config['name_unregister']
-        self.idNo = config['idNo_unregister']
-        self.db.update_driver_info(self.mobile, self.idNo, self.name)
+        self.db.update_driver_info()
         self.driver.start_activity(app_activity=app_activity, app_package=app_package)
         self.logger.info('########################### TestCarCertification START ###########################')
         pass

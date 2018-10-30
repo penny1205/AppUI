@@ -6,15 +6,16 @@ from util.log.log import Log
 from util.config.yaml.readyaml import ReadYaml
 from util.file.fileutil import FileUtil
 from util.db.dbutil import DBUtil
-from BVT.common.db_operation import DbOperation
+from util.driver.driver_operation import DriverOperation
 from page_object.chezhu.chezhu_common.main_tab_chezhu import MainTabCheZhu
 from page_object.chezhu.chezhu_userCenter.personCenter_chezhu import PersonCenterCheZhu
-from page_object.chezhu.chezhu_userCenter.wallet_open_chezhu import WalletOpenCheZhu
+from page_object.chezhu.chezhu_userCenter.setting_chezhu import SettingCheZhu
+from page_object.chezhu.chezhu_login.login_chezhu import LoginCheZhu
 from util.driver.driver import AppUiDriver
 
 
-class TestWalletOpen(unittest.TestCase):
-    """凯京车主APP 开通钱包"""
+class TestLogout(unittest.TestCase):
+    """凯京车主APP 退出登录"""
 
     def setUp(self):
         """前置条件准备"""
@@ -23,31 +24,28 @@ class TestWalletOpen(unittest.TestCase):
         app_activity = config['appActivity_chezhu']
         # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
         self.logger = Log()
-        self.db = DbOperation()
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
-        self.mobile = config['mobile_unregister']
-        self.db.certificate_driver_info()
+        self.driver_operation = DriverOperation(self.driver)
         self.driver.start_activity(app_activity=app_activity, app_package=app_package)
-        self.logger.info('########################### TestWalletOpen START ###########################')
+        self.login_page = LoginCheZhu(self.driver).activity
+        self.logger.info('########################### TestLogout START ###########################')
         pass
 
     def tearDown(self):
         """测试环境重置"""
-        self.db.initialize_driver_info(self.mobile)
-        self.logger.info('########################### TestWalletOpen END ###########################')
+
+        self.logger.info('########################### TestLogout END ###########################')
         pass
 
-    def test_bvt_wallet_open(self):
-        """开通司机钱包"""
-        wallet = WalletOpenCheZhu(self.driver)
+    def test_bvt_logout(self):
+        """用户退出登录"""
+        self.driver_operation.getScreenShot('TestLogout')
         MainTabCheZhu(self.driver).goto_person_center()
-        PersonCenterCheZhu(self.driver).goto_user_wallet()
-        wallet.wallet_open()
-        wallet.set_pwd()
-        sql = 'select COUNT(*) FROM YD_APP_MYBANK_OPEN_ACCOUNT where mobile = \'{0}\' and accountOpened = 1'.format(
-            self.mobile)
-        wallet_type = DBUtil().execute_sql(sql)
-        self.assertEqual('1', str(wallet_type))
+        PersonCenterCheZhu(self.driver).goto_setting_page()
+        SettingCheZhu(self.driver).user_logout()
+        self.driver_operation.getScreenShot('TestLogout')
+        activity = self.driver_operation.get_activity()
+        self.assertEqual(self.login_page, activity)
 
 
 if __name__ == '__main__':
