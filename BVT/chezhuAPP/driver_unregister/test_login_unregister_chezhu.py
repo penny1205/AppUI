@@ -37,8 +37,8 @@ class TestLoginUnregister(unittest.TestCase):
         """未认证司机登录"""
         self.driver_tool.getScreenShot('login_unregister_chezhu')
         LoginCheZhu(self.driver).user_login(self.mobile)
-        activity = self.driver_tool.get_activity()
         self.driver_tool.getScreenShot('login_unregister_chezhu')
+        activity = self.driver_tool.get_activity()
         self.assertEqual(self.main_page, activity)  # 检查登录操作后页面activity是否切换为主列表页
 
 

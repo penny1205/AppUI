@@ -23,6 +23,6 @@ class WalletOpenCheZhu(CheZhu):
 
     @catch_exception
     def set_pwd(self):
-        WalletPasswordCheZhu(self.driver).send_password('123321')
-        WalletPasswordCheZhu(self.driver).send_password('123321')
+        WalletPasswordCheZhu(self.app_driver).send_password('123321')
+        WalletPasswordCheZhu(self.app_driver).send_password('123321')
         self.driver.click_element(self.__confirm_pwd)

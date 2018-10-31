@@ -8,4 +8,5 @@ from util.driver.driver_operation import DriverOperation
 class CheZhu(object):
     def __init__(self, driver):
         self.log = Log()
+        self.app_driver = driver
         self.driver = DriverOperation(driver)

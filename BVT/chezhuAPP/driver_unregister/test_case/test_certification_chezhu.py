@@ -55,9 +55,8 @@ class TestCertification(unittest.TestCase):
         CarCertificateCheZhu(self.driver).wait_page()
         driver_info = self.db.select_driver_info(self.mobile)
         self.assertEqual(self.name, driver_info['name'])
-        self.assertEqual(self.idNo, str(driver_info['idNo']))
+        self.assertEqual(str(self.idNo), str(driver_info['idNo']))
         self.assertEqual('Y', driver_info['isCertifacate'])
-        self.assertEqual('0', str(driver_info['AuthFlag']))
 
 
 if __name__ == '__main__':

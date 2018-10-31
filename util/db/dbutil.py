@@ -118,7 +118,8 @@ class RedisDb(object):
 
 if __name__ == '__main__':
     test = RedisDb()
-    code = test.get_code(name='AppLoginVerifyCode', key='"18056070690"')
+    # code = test.get_code(name='AppLoginVerifyCode', key='"18056070690"')
+    code = test.del_key(name='CHK_ONE_DAY_LOGIN', key= 'all')
     print(code)
     # code = test.get_key('YUDIAN-QUARTZ-JOB-TASK')
     # print(code)

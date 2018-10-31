@@ -9,7 +9,7 @@ from util.driver.project_decorator import catch_exception
 
 class LoginCheZhu(CheZhu):
     # 车主登录页面
-    activity = '.account.LoginActivity'  # 登录页activity
+    __activity = '.account.LoginActivity'  # 登录页activity
 
     @catch_exception
     def user_login(self, mobile):
@@ -19,7 +19,7 @@ class LoginCheZhu(CheZhu):
         __msg_code = {'path': ['com.mustang:id/editview_rect', 1], 'identifyBy': 'ids'}  # 验证码
         __login = {'path': 'com.mustang:id/login_submit', 'identifyBy': 'id'}  # 登录按钮
         __mobile['keys'] = mobile
-        self.driver.wait_activity(self.activity)
+        self.driver.wait_activity(self.__activity)
         # 获取验证码
         self.driver.send_keys(__mobile)
         self.driver.click_element(__get_code)
@@ -30,4 +30,6 @@ class LoginCheZhu(CheZhu):
         self.driver.send_keys(__msg_code)
         self.driver.click_element(__login)
 
-
+    def wait_login_page(self):
+        wait_state = self.driver.wait_activity(self.__activity, timeout=20)
+        return wait_state

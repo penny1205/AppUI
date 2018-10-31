@@ -6,6 +6,7 @@ from util.config.yaml.readyaml import ReadYaml
 from util.file.fileutil import FileUtil
 import unittest
 from BVT.chezhuAPP.driver_unregister.test_login_unregister_chezhu import TestLoginUnregister
+from BVT.chezhuAPP.test_logout_chezhu import TestLogout
 from util.unittest.unittestutil import UnitTestUtil
 from util.driver.driver import AppUiDriver
 
@@ -24,6 +25,7 @@ class UnregisterDriverCaseSuit(object):
         test_suite.addTest(
             UnitTestUtil().discover_pattern(FileUtil.getProjectObsPath() + '/BVT/chezhuAPP/driver_unregister/test_case',
                                             'test*.py'))
+        test_suite.addTest(unittest.makeSuite(TestLogout))
         # test_suite.addTest(TestLoginRegister('test_bvt_login_register'))
         # test_suit = test_suit + UnitTestUtil().discover_pattern(
         #     FileUtil.getProjectObsPath() + '/BVT/chezhuAPP/driver_register/test_case', 'test*.py')

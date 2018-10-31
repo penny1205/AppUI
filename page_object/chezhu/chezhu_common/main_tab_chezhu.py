@@ -22,7 +22,11 @@ class MainTabCheZhu(CheZhu):
         self.person_center = {
             'path': "//android.widget.TextView[@resource-id=\"com.mustang:id/textview\" and @text=\"我的\"]",
             'identifyBy': 'xpath'}
-        # self.driver.wait_activity(activity=self.activity, timeout=20)
+
+    @catch_exception
+    def wait_main_page(self):
+        wait_state = self.driver.wait_activity(activity=self.activity, timeout=20)
+        return wait_state
 
     @catch_exception
     def goto_msg_center(self):

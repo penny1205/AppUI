@@ -5,7 +5,6 @@ import unittest
 from util.log.log import Log
 from util.config.yaml.readyaml import ReadYaml
 from util.file.fileutil import FileUtil
-from util.db.dbutil import DBUtil
 from BVT.common.db_operation import DbOperation
 from page_object.chezhu.chezhu_common.main_tab_chezhu import MainTabCheZhu
 from page_object.chezhu.chezhu_userCenter.personCenter_chezhu import PersonCenterCheZhu
@@ -21,7 +20,7 @@ class TestWalletOpen(unittest.TestCase):
         config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
         app_package = config['appPackage_chezhu']
         app_activity = config['appActivity_chezhu']
-        # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
+        AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
         self.logger = Log()
         self.db = DbOperation()
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
@@ -33,6 +32,7 @@ class TestWalletOpen(unittest.TestCase):
 
     def tearDown(self):
         """测试环境重置"""
+        self.db.delete_wallet_driver()
         self.db.initialize_driver_info(self.mobile)
         self.logger.info('########################### TestWalletOpen END ###########################')
         pass
@@ -44,9 +44,11 @@ class TestWalletOpen(unittest.TestCase):
         PersonCenterCheZhu(self.driver).goto_user_wallet()
         wallet.wallet_open()
         wallet.set_pwd()
+        page_wait = MainTabCheZhu(self.driver).wait_main_page()
+        self.assertTrue(page_wait)
         sql = 'select COUNT(*) FROM YD_APP_MYBANK_OPEN_ACCOUNT where mobile = \'{0}\' and accountOpened = 1'.format(
             self.mobile)
-        wallet_type = DBUtil().execute_sql(sql)
+        wallet_type = self.db.update(sql)
         self.assertEqual('1', str(wallet_type))
 
 

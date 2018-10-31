@@ -27,13 +27,12 @@ class TestLogout(unittest.TestCase):
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
         self.driver_operation = DriverOperation(self.driver)
         self.driver.start_activity(app_activity=app_activity, app_package=app_package)
-        self.login_page = LoginCheZhu(self.driver).activity
         self.logger.info('########################### TestLogout START ###########################')
         pass
 
     def tearDown(self):
         """测试环境重置"""
-        RedisDb().del_key(name='CHK_ONE_DAY_LOGIN', key= 'all')
+        RedisDb().del_key(name='CHK_ONE_DAY_LOGIN', key='all')
         self.logger.info('########################### TestLogout END ###########################')
         pass
 
@@ -44,8 +43,8 @@ class TestLogout(unittest.TestCase):
         PersonCenterCheZhu(self.driver).goto_setting_page()
         SettingCheZhu(self.driver).user_logout()
         self.driver_operation.getScreenShot('TestLogout')
-        activity = self.driver_operation.get_activity()
-        self.assertEqual(self.login_page, activity)
+        page_wait = LoginCheZhu(self.driver).wait_login_page()
+        self.assertTrue(page_wait)
 
 
 if __name__ == '__main__':

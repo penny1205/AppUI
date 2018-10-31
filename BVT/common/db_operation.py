@@ -58,9 +58,11 @@ class DbOperation(object):
               ' and `source`=\'register\')'.format(idNo, name, custId, mobile)
         self.db.execute_sql(sql)
 
-    def select_wallet_info(self, loginId):
-        sql = ''
+    def delete_wallet_driver(self):
+        mobile = self.config['mobile_unregister']
+        sql = 'UPDATE `YD_APP_MYBANK_OPEN_ACCOUNT` SET `accountOpened`=0 WHERE (`mobile`=\'{0}\' AND `accountOpened`=1);'.format(mobile)
+        self.db.execute_sql(sql)
+
 
 if __name__ == '__main__':
-    user = DbOperation().update_driver_info( '18000001111', '412725198407038239', '完颜瑞星')
-
+    user = DbOperation().delete_wallet_driver()
