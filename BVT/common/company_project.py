@@ -3,14 +3,12 @@
 # author: vin
 
 import datetime
-import random
 from util.log.log import Log
 from util.config.yaml.readyaml import ReadYaml
 from util.file.fileutil import FileUtil
 from util.db.dbutil import DBUtil
 from util.http.headerdict import HeaderDict
 from util.http.httpclient import HttpClient
-from interface.wuliuyun.wayBill.getProjectsList import GetProjectsList
 
 
 class CompanyProject(object):
@@ -25,9 +23,10 @@ class CompanyProject(object):
         self.partnerNo = self.config['partnerNo']
 
     def select_project(self):
-        sql = 'SELECT projectId FROM YD_TMS_PROJECT where partnerNo = \'{0}\' '.format(self.config['partnerNo'])
-        projects_list = self.db.execute_select_many_record(sql)
-        return projects_list
+        sql = 'SELECT projectId, projectName FROM YD_TMS_PROJECT where partnerNo = \'{0}\' '.format(
+            self.config['partnerNo'])
+        project_list = self.db.execute_select_many_record(sql)[0]
+        return project_list
 
     def add_project(self):
         header = HeaderDict().wuliuyun_header()
@@ -51,24 +50,21 @@ class CompanyProject(object):
     def get_project(self):
         projects_list = self.select_project()
         if projects_list:
-            projects = []
-            for project in projects_list:
-                projects.append(project[0])
             # 更新项目有效时间，使项目生效，返回生效项目列表
-            project_id = random.choice(projects)
+            project_id = projects_list[0]
             sql = 'UPDATE YD_TMS_PROJECT set endTime=\'{0}\'  where partnerNo = \'{1}\' and projectId = \'{2}\''.format(
                 self.endDate, self.config['partnerNo'], project_id)
             self.db.execute_sql(sql)
-            the_projects = GetProjectsList().get_projectlist().json()['content']['dataList']
-            return the_projects
+            the_project = self.select_project()
+            return the_project
         else:
             self.add_project()
-            the_projects = GetProjectsList().get_projectlist().json()['content']['dataList']
-            return the_projects
+            the_project = self.select_project()
+            return the_project
 
 
 if __name__ == '__main__':
-    project = CompanyProject().add_project()
+    project = CompanyProject().get_project()
     print(project)
     # projects = []
     # for key in project:

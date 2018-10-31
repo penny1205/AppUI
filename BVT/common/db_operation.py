@@ -63,6 +63,20 @@ class DbOperation(object):
         sql = 'UPDATE `YD_APP_MYBANK_OPEN_ACCOUNT` SET `accountOpened`=0 WHERE (`mobile`=\'{0}\' AND `accountOpened`=1);'.format(mobile)
         self.db.execute_sql(sql)
 
+    def delete_waybill_driver(self, mobile):
+        sql_select = 'SELECT id from YD_APP_TRANSPORTCASH where mobile = {0} and delStatus = 0'.format(mobile)
+        waybill_list = self.db.execute_select_many_record(sql_select)
+        for waybill_id in waybill_list:
+            id = waybill_id[0]
+            sql_del = 'UPDATE YD_APP_TRANSPORTCASH SET delStatus = 1 WHERE id = {0}'.format(id)
+            self.db.execute_sql(sql_del)
+
+    def select_waybill_state(self, mobile):
+        sql_select = 'SELECT billStatus from YD_APP_TRANSPORTCASH where mobile = {0} and delStatus = 0'.format(mobile)
+        state = self.db.execute_select_one_record(sql_select)
+        return state
+
 
 if __name__ == '__main__':
-    user = DbOperation().delete_wallet_driver()
+    user = DbOperation().delete_waybill_driver(18655148783)
+

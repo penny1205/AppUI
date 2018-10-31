@@ -2,36 +2,45 @@
 # -*- coding:utf-8 -*-
 # author: vin
 
-import os
 import random
 import datetime
 from util.log.log import Log
+from util.http.httpclient import HttpClient
 from util.config.yaml.readyaml import ReadYaml
 from util.file.fileutil import FileUtil
 from util.db.dbutil import DBUtil
 from BVT.common.company_project import CompanyProject
-from BVT.common.company_cars import CompanyCars
-from interface.wuliuyun.wayBill.saveWayBill import SaveWayBill
-from interface.wuliuyun.wayBill.postTmsConfirmWayBill import PostTmsConfirmWayBill
-from interface.wuliuyun.wayBill.postArriveConfirm import BillArriveConfirm
-from interface.wuliuyun.wayBill.postShipperUploadReceipt import PostShipperUploadReceipt
+
 
 
 class CreateWayBill(object):
     """ 创建运单公共方法 """
 
-    def __init__(self):
+    def __init__(self, mobile):
         self.logger = Log()
         self.config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
+        ## URL ##
+        self.url_create_waybill = 'https://hfuapi.keking.cn:8015/app/payment/saveWayBill'
+        self.url_confirm_waybill = 'https://hfuapi.keking.cn:8015/app/payment/tmsConfirmWayBill'
+        self.url_arrive_waybill = 'https://hfuapi.keking.cn:8015/app/payment/confirmWayComplete'
+        self.url_upload_receipt = 'https://hfuapi.keking.cn:8015/app/shipper/uploadReceipt'
+        self.head_dict = {
+            'YD_VERSION': str(self.config['wuliuyun_version']),
+            'YD_CLIENT': str(self.config['wuliuyun_client']),
+            'YD_OAUTH': str(self.config['wuliuyun_token']),
+            'User-Agent': str(self.config['User-Agent'])
+        }
+
+        ## 录单信息 ##
+        self.mobile = mobile
         # 订单号
         self.upWayBillId = ''
         # 用车日期
         self.date = datetime.date.today()
         # 项目信息
         projects_list = CompanyProject().get_project()
-        project = random.choice(projects_list)
-        self.projects_id = project['projectId']
-        self.projects_name = project['projectName']
+        self.projects_id = projects_list[0]
+        self.projects_name = projects_list[1]
         # 出发地
         self.sendProvince = '北京'
         self.sendCity = '北京'
@@ -52,7 +61,6 @@ class CreateWayBill(object):
         self.cargoWorth = random.randint(1, 1000)  # 货物价值
         self.insuranceCosts = random.randint(1, 1000)  # 货物投保费用
         # 承运信息
-        self.mobile = self.config['chezhu_mobile']  # 联系电话
         self.realName = '自动化测试'  # 司机姓名
         self.carNo = '皖A00000'
         self.idNo = '340100199001010101'  # 司机身份证号
@@ -79,109 +87,165 @@ class CreateWayBill(object):
         self.deliveryFee = random.randint(0, 9999)  # 送货费
         self.otherFee = random.randint(0, 9999)  # 其他费用
         # 其他
-        self.photoAirWay = FileUtil.getProjectObsPath() + os.sep + 'config' + os.sep + 'image' + os.sep + 'photoTransProt.png'  # 运输协议照片
-        self.content = '自动化脚本录单'  # 运单备注
+        # self.photoAirWay = FileUtil.getProjectObsPath() + os.sep + 'config' + os.sep + 'image' + os.sep + 'photoTransProt.png'  # 运输协议照片
+        self.content = 'UI自动化录单'  # 运单备注
         self.partnerNo = self.config['partnerNo']  # 货主编号
         self.maker = self.config['partnerNo']  # 制单人
 
         # 公司车信息
-        self.mobile_company = random.choice(CompanyCars().get_company_drivers_mobile())
+        # self.mobile_company = random.choice(CompanyCars().get_company_drivers_mobile())
 
-
-    def select_waybill(self, mobile):
+    def select_waybill(self):
+        # 查找待发车运单
         db = DBUtil(host=self.config['db_host'], port=self.config['db_port'],
                     user=self.config['db_user'], passwd=self.config['db_passwd'],
                     dbname=self.config['db_dbname'], charset=self.config['db_charset'])
-        sql = 'SELECT * from YD_APP_TRANSPORTCASH where mobile = \'{0}\' AND partnerNo = \'{1}\' AND billStatus = \'W\' AND delStatus = \'0\''.format(
-            mobile, self.partnerNo)
+        sql = 'SELECT * from YD_APP_TRANSPORTCASH where mobile = \'{0}\' AND partnerNo = \'{1}\' AND billStatus = \'W\' AND delStatus = 0'.format(
+            self.mobile, self.partnerNo)
         waybill = db.execute_select_one_record(sql)[0]
         return waybill
+
+    def delete_waybill(self):
+        # 删除待发车运单
+        db = DBUtil(host=self.config['Mysql_host'], port=self.config['Mysql_port'],
+                         user=self.config['Mysql_user'], passwd=self.config['Mysql_passwd'],
+                         dbname=self.config['Mysql_dbname'], charset=self.config['Mysql_charset'])
+        sql = 'UPDATE YD_APP_TRANSPORTCASH SET delStatus = 1 where mobile = \'{0}\' AND partnerNo = \'{1}\' AND billStatus = \'W\' AND delStatus = 0'.format(
+            self.mobile, self.partnerNo)
+        db.execute_sql(sql)
 
     def create_waybill(self):
         """ 录单 """
         # 录单字段更新至2017-12-22版本
         carType = '2'  # 用车类型 carType 1 公司车  2 外请车
+        self.logger.info('###  创建外请车运单  ###')
+        try:
+            files = {
+                # 基本信息
+                "projectId": (None, str(self.projects_id)),  # 项目ID
+                "projects": (None, str(self.projects_name)),  # 项目名称
+                "upWayBillId": (None, str(self.upWayBillId)),  # 订单号
+                "carType": (None, str(carType)),  # 用车性质 1公司车 2外请车
+                "applyDate": (None, str(self.date)),  # 用车日期
+                "sendProvince": (None, str(self.sendProvince)),  # 发货省份
+                "sendCity": (None, str(self.sendCity)),  # 发货城市
+                "sendDistrict": (None, str(self.sendDistrict)),  # 发货区县
+                "arriveProvince": (None, str(self.arriveProvince)),  # 到达省份
+                "arriveCity": (None, str(self.arriveCity)),  # 到达城市
+                "arriveDistrict": (None, str(self.arriveDistrict)),  # 到达区县
+                "station": (None, str(self.station)),
+                # 途径地 [{ "province":"",# 省份"city":"",# 城市"district":""# 区县},......]
+                "demandId": (None, ""),  # 运单需求ID
+                "receiptReceive": (None, str(self.receiptReceive)),
+                # 回单信息[{ "receiver":"",# 回单接收人"mobile":""# 联系电话,"province":""# 省份,"city":"",# 城市,"district":"",# 区县,"addressDetail":""# 详细地址}]
 
-            self.logger.info('###  创建外请车运单  ###')
-            response = SaveWayBill().save_waybill(projectId=self.projects_id, projects=self.projects_name,
-                                                  upWayBillId=self.upWayBillId, carType=carType,
-                                                  applyDate=self.date, sendProvince=self.sendProvince,
-                                                  sendCity=self.sendCity, sendDistrict=self.sendDistrict,
-                                                  arriveProvince=self.arriveProvince,
-                                                  arriveCity=self.arriveCity, arriveDistrict=self.arriveDistrict,
-                                                  station=self.station, demandId='', receiptReceive=self.receiptReceive,
-                                                  cargoName=self.cargoName, cargoWeight=self.cargoWeight,
-                                                  cargoVolume=self.cargoVolume,
-                                                  cargoNumberOfCases=self.cargoNumberOfCases,
-                                                  cargoWorth=self.cargoWorth,
-                                                  insuranceCosts=self.insuranceCosts, mobile=self.mobile,
-                                                  accountName=self.accountName, driverCardBank=self.driverCardBank,
-                                                  driverCardNo=self.driverCardNo,
-                                                  vehicleIdNo=self.vehicleIdNo, supplierId=self.supplierId,
-                                                  supplierName=self.supplierName, oilCardNo=self.oilCardNo,
-                                                  hasReceipt=self.hasReceipt, realName=self.realName, idNo=self.idNo,
-                                                  carNo=self.carNo, carModel=self.carModel, carLength=self.carLength,
-                                                  income=self.income, totalAmt=self.totalAmt, preAmt=self.preAmt,
-                                                  oilAmt=self.oilAmt, destAmt=self.destAmt, lastAmt=self.lastAmt,
-                                                  oilCardDeposit=self.oilCardDeposit,
-                                                  handlingFee=self.handlingFee, deliveryFee=self.deliveryFee,
-                                                  otherFee=self.otherFee,
-                                                  source='APP', photoAirWay=self.photoAirWay, content=self.content)
+                # 货物信息
+                "cargoName": (None, str(self.cargoName)),  # 货物名称
+                "cargoWeight": (None, str(self.cargoWeight)),  # 货物重量
+                "cargoVolume": (None, str(self.cargoVolume)),  # 货物体积
+                "cargoNumberOfCases": (None, str(self.cargoNumberOfCases)),  # 货物件数
+                "cargoWorth": (None, str(self.cargoWorth)),  # 货物价值
+                "insuranceCosts": (None, str(self.insuranceCosts)),  # 货物投保费用
+
+                # 承运信息
+                "mobile": (None, str(self.mobile)),  # 联系电话
+                "accountName": (None, str(self.accountName)),  # 账户名
+                "driverCardBank": (None, str(self.driverCardBank)),  # 司机账户开户行
+                "driverCardNo": (None, str(self.driverCardNo)),  # 司机银行卡号
+                "vehicleIdNo": (None, str(self.vehicleIdNo)),  # 车架号
+                "supplierId": (None, str(self.supplierId)),  # 供应商ID
+                "supplierName": (None, str(self.supplierName)),  # 供应商名称
+                "oilCardNo": (None, str(self.oilCardNo)),  # 油卡卡号
+                "hasReceipt": (None, str(self.hasReceipt)),  # 是否有回单 1有 0没有
+                "realName": (None, str(self.realName)),  # 司机姓名
+                "idNo": (None, str(self.idNo)),  # 司机身份证号
+                "carNo": (None, str(self.carNo)),  # 车牌号
+                "carLength": (None, str(self.carLength)),  # 车长
+                "carModel": (None, str(self.carModel)),  # 车型
+
+                # 运费信息
+                "income": (None, str(self.income)),  # 发车收入
+                "totalAmt": (None, str(self.totalAmt)),  # 总金额
+                "preAmt": (None, str(self.preAmt)),  # 预付款
+                "oilAmt": (None, str(self.oilAmt)),  # 油卡金额
+                "destAmt": (None, str(self.destAmt)),  # 到付金额
+                "lastAmt": (None, str(self.lastAmt)),  # 尾款
+
+                # 自定义费用
+                "oilCardDeposit": (None, str(self.oilCardDeposit)),  # 油卡押金
+                "handlingFee": (None, str(self.handlingFee)),  # 装卸费
+                "deliveryFee": (None, str(self.deliveryFee)),  # 送货费
+                "otherFee": (None, str(self.otherFee)),  # 其他费用
+
+                # 其他
+                "source": (None, "APP"),  # 来源 (TMS/APP)
+                # "photoAirWay": "",  # 运输协议照片
+                "content": (None, str(self.content)),  # 运单备注
+                "partnerNo": (None, str(self.partnerNo)),  # 货主编号
+                "maker": (None, str(self.maker))  # 制单人
+            }
+
+            # 发送请求
+            response = HttpClient().post_multipart(self.url_create_waybill, files=files, header_dict=self.head_dict)
             return response
-        else:
+        except Exception:
             self.logger.error('###  创建运单失败：carType error!  ###')
             return None
 
-    def saveWayBill(self, carType):
+    def saveWayBill(self):
         # 创建运单 处理手机号有未发车运单的情况
-        if carType == '1':
-            mobile = self.mobile_company
-        elif carType == '2':
-            mobile = self.mobile
-
-        response = self.create_waybill(carType)
+        response = self.create_waybill()
         if response.json()['code'] == 0:
-            # billId = response.json()['content']['billId']
             return response
         else:
             self.logger.info('创建运单失败{0}'.format(response.json()))
-            waybillId = self.select_waybill(mobile)
-            self.logger.info('查找该司机未确认发车的运单，并进行确认发车操作')
-            PostTmsConfirmWayBill().post_tmsconfirmwaybill(waybillId)
-            response = self.create_waybill(carType)
+            self.logger.info('查找该司机未确认发车的运单，并进行删除操作')
+            self.delete_waybill()
+            response = self.create_waybill()
             self.logger.info('确认发车返回结果：{0}'.format(response.json()))
-            # billId = response.json()['content']['billId']
             return response
 
     def confirmWayBill(self):
         # 创建运单并确认发车
         waybillId = self.saveWayBill().json()['content']['billId']
-        response = PostTmsConfirmWayBill().post_tmsconfirmwaybill(waybillId)
+        body_dict = {
+            'billId': waybillId  # 运单ID
+        }
+        response = HttpClient().post_json(url=self.url_confirm_waybill, body_dict=body_dict, header_dict=self.head_dict)
         self.logger.info('确认发车返回结果：{0}'.format(response.json()))
         return waybillId
 
     def arrive_confirm(self):
         # 对运单进行到达确认操作
         waybillId = self.confirmWayBill()
-        response = BillArriveConfirm().bill_arriveconfirm(waybillId)
+        body_dict = {
+            'billId': waybillId  # 运单ID
+        }
+        response = HttpClient().post_json(self.url_arrive_waybill, body_dict=body_dict, header_dict=self.head_dict)
         self.logger.info('到达确认返回结果：{0}'.format(response.json()))
         return waybillId
 
     def upload_receipt(self):
         # 对运单进行回单上传操作
         waybillId = self.arrive_confirm()
-        receipt0 = FileUtil.getProjectObsPath() + os.sep + 'config' + os.sep + 'image' + os.sep + 'receipt0.png'
         abnormal = 'Y'  # 是否有异常 Y：是、N：是
         damaged = 'Y'  # 是否有破损 Y：是、N：是
         losted = 'Y'  # 是否丢失 Y：是、N：是
         memo = '自动化测试--回单上传'  # 备注
-        response = PostShipperUploadReceipt().post_shipper_upload_receipt(waybillId=waybillId, abnormal=abnormal,
-                                                                          damaged=damaged, losted=losted, memo=memo,
-                                                                          receipt0=receipt0)
+        files = {
+            "id": (None, str(waybillId)),  # 运单id
+            "abnormal": (None, abnormal),  # 是否有异常 Y：是、N：是
+            "damaged": (None, damaged),  # 是否有破损 Y：是、N：是
+            "losted": (None, losted),  # 是否丢失 Y：是、N：是
+            "memo": (None, memo),  # 备注
+            "type": (None, type),  # S：货主、C：司机
+            "receipt_0": '',  # 回单图片文件
+        }
+        response = HttpClient().post_multipart(self.url_upload_receipt, header_dict=self.head_dict, files=files)
         self.logger.info('回单上传返回结果： {0}'.format(response.json()))
         return waybillId
 
 
 if __name__ == '__main__':
-    test = CreateWayBill().saveWayBill(carType='1')
-    print(test)
+    test = CreateWayBill('18655148783').saveWayBill()
+    print(test.json())
