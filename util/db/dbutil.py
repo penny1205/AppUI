@@ -50,7 +50,8 @@ class DBUtil(object):
         try:
             cur = self.connect.cursor()
             cur.execute(query)
-            self.connect.close()
+            # self.connect.close()
+            cur.close()
             return cur.fetchone()
         except Exception as e:
             self.logger.info('Execute sql failed ! : {0}'.format(e))

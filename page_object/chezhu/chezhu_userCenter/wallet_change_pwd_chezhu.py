@@ -3,6 +3,7 @@
 # author: vin
 from page_object.chezhu.chezhu import CheZhu
 from util.driver.project_decorator import catch_exception
+from page_object.chezhu.chezhu_common.wallet_password_chezhu import WalletPasswordCheZhu
 
 
 class WalletChangePwdCheZhu(CheZhu):
@@ -16,6 +17,8 @@ class WalletChangePwdCheZhu(CheZhu):
     def confirm_change_pwd(self):
         self.driver.click_element(self.__confirm_btn)
 
-
-
-
+    def change_pwd(self, oldpwd, newpwd):
+        self._pwd = WalletPasswordCheZhu(self.app_driver)
+        self._pwd.send_password(oldpwd)
+        self._pwd.send_password(newpwd)
+        self._pwd.send_password(newpwd)

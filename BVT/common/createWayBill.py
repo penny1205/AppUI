@@ -12,7 +12,6 @@ from util.db.dbutil import DBUtil
 from BVT.common.company_project import CompanyProject
 
 
-
 class CreateWayBill(object):
     """ 创建运单公共方法 """
 
@@ -247,5 +246,5 @@ class CreateWayBill(object):
 
 
 if __name__ == '__main__':
-    test = CreateWayBill('18655148783').saveWayBill()
+    test = CreateWayBill('18655148783').arrive_confirm()
     print(test.json())

@@ -60,7 +60,8 @@ class DbOperation(object):
 
     def delete_wallet_driver(self):
         mobile = self.config['mobile_unregister']
-        sql = 'UPDATE `YD_APP_MYBANK_OPEN_ACCOUNT` SET `accountOpened`=0 WHERE (`mobile`=\'{0}\' AND `accountOpened`=1);'.format(mobile)
+        sql = 'UPDATE `YD_APP_MYBANK_OPEN_ACCOUNT` SET `accountOpened`=0 WHERE (`mobile`=\'{0}\' AND `accountOpened`=1);'.format(
+            mobile)
         self.db.execute_sql(sql)
 
     def delete_waybill_driver(self, mobile):
@@ -76,7 +77,34 @@ class DbOperation(object):
         state = self.db.execute_select_one_record(sql_select)
         return state
 
+    def add_wallet_consignor(self, mobile):
+        sql_select = 'SELECT loginId from YD_APP_USER where mobile = {0} and source = \'register\''.format(mobile)
+        loginId = self.db.execute_select_one_record(sql_select)[0]
+        sql_consignor = 'SELECT id FROM YD_APP_PAYMENT_RECEIVER WHERE loginId = \'{}\' ORDER BY id DESC LIMIT 1'.format(
+            loginId)
+        consignor_id = self.db.execute_select_one_record(sql_consignor)
+        if consignor_id:
+            sql_update = 'UPDATE YD_APP_PAYMENT_RECEIVER SET isAvailable = 1 , isDelete = 0 WHERE id = {0}'.format(
+                consignor_id[0])
+            self.db.execute_sql(sql_update)
+        else:
+            sql_insert = 'INSERT INTO YD_APP_PAYMENT_RECEIVER (`createDate`, `isOpenPayMent`, `loginId`, `receiverId`, ' \
+                         '`receiverIdNo`, `receiverMobile`, `receiverName`, `receiverRelation`, `updateDate`, `comfirm`, ' \
+                         '`isAvailable`, `receiverLoginId`, `isDelete`) VALUES (\'2018-11-01 15:16:18\', NULL, \'{0}\', ' \
+                         'NULL, \'320621199210280523\', \'18020329066\', \'王燕\', \'其它\', NULL, 1, 1, ' \
+                         '\'APP20170418150043iFVLP\', \'0\')'.format(loginId)
+            self.db.execute_insert_sql(sql_insert)
+
+    def delete_wallet_consignor(self, mobile):
+        sql_select = 'SELECT loginId from YD_APP_USER where mobile = {0} and source = \'register\''.format(mobile)
+        loginId = self.db.execute_select_one_record(sql_select)[0]
+        sql_consignor = 'SELECT id from YD_APP_PAYMENT_RECEIVER where loginId = \'{0}\' and isAvailable = 1 and isDelete = 0'.format(
+            loginId)
+        consignor_list = self.db.execute_select_many_record(sql_consignor)
+        for id in consignor_list:
+            sql_delete = 'UPDATE YD_APP_PAYMENT_RECEIVER SET isAvailable = 0,isDelete = 1 WHERE id = {0}'.format(id[0])
+            self.db.execute_sql(sql_delete)
+
 
 if __name__ == '__main__':
-    user = DbOperation().delete_waybill_driver(18655148783)
-
+    user = DbOperation().insert_wallet_consignor(18655148783)

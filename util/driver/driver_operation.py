@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # author: vin
 import time
-import re
 from selenium.common.exceptions import NoSuchElementException
 from util.log.log import Log
 from util.file.fileutil import FileUtil

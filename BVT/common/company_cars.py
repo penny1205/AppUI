@@ -7,8 +7,6 @@ from util.config.yaml.readyaml import ReadYaml
 from util.file.fileutil import FileUtil
 from util.http.headerdict import HeaderDict
 from util.http.httpclient import HttpClient
-from interface.wuliuyun.wayBill.getCarList import GetCarList
-from interface.wuliuyun.wayBill.postUploadFile import PostUploadFile
 
 
 class CompanyCars(object):

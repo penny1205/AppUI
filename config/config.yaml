@@ -28,6 +28,10 @@ idNo_unregister: 412725198407038239
 custId_unregister: 172713
 id_unregister: APP20181028171617VjVeg
 
+### chezhu wallet consignor info ###
+consignor_name: 王燕
+consignor_idNo: 320621199210280523
+consignor_mobile: 18020329066
 
 ### Log path ###
 log_path_info: \log

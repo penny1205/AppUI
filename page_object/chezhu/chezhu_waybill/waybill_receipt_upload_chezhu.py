@@ -3,12 +3,14 @@
 # author: vin
 from page_object.chezhu.chezhu import CheZhu
 from util.driver.project_decorator import catch_exception
+from page_object.chezhu.chezhu_common.choose_photo_chezhu import ChoosePhotoCheZhu
 
 
 class WaybillReceiptUploadCheZhu(CheZhu):
     # 回单上传页面
     receipt_upload_activity = '.account.ReceiptUploadActivity'
     __add_image = {'identifyBy': 'id', 'path': 'com.mustang:id/multi_select_item_image'}
+    __choose_image = {'identifyBy': 'id', 'path': 'com.mustang:id/choose_image_text'}
     __delete_image = {'identifyBy': 'id', 'path': 'com.mustang:id/multi_select_item_close'}
     __add_info = {'identifyBy': 'id', 'path': 'com.mustang:id/receipt_upload_picture_check'}
     __info_1 = {'identifyBy': 'id', 'path': 'com.mustang:id/receipt_upload_picture_torn'}
@@ -20,6 +22,8 @@ class WaybillReceiptUploadCheZhu(CheZhu):
     def add_receipt_image(self):
         # 上传回单照片
         self.driver.click_element(self.__add_image)
+        self.driver.click_element(self.__choose_image)
+        ChoosePhotoCheZhu(self.app_driver).choose_image()
 
     @catch_exception
     def delete_receipt_image(self):

@@ -19,6 +19,11 @@ class WalletMainCheZhu(CheZhu):
     __wallet_setting_cancel = {'path': 'com.mustang:id/pay_select_cancel', 'identifyBy': 'id'}  # 支付设置-取消
 
     @catch_exception
+    def wait_wallet_page(self):
+        wait_state = self.driver.wait_activity(activity=self.wallet_activity, timeout=20)
+        return wait_state
+
+    @catch_exception
     def go_to_cash(self):
         # 进入提现页面
         self.driver.click_element(self.__wallet_cash)
