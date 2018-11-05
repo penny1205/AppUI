@@ -44,7 +44,7 @@ class TestWalletPasswordChange(unittest.TestCase):
         MainTabCheZhu(self.driver).goto_person_center()
         PersonCenterCheZhu(self.driver).goto_user_wallet()
         WalletMainCheZhu(self.driver).go_to_change_pwd()
-        wallet_pwd.change_pwd(oldpwd=self.pwd,newpwd=self.newpwd)
+        wallet_pwd.change_pwd(oldpwd=self.pwd, newpwd=self.newpwd)
         wallet_pwd.confirm_change_pwd()
         wait_page = WalletMainCheZhu(self.driver).wait_wallet_page()
         self.driver_tools.getScreenShot('wallet_password_change')
@@ -52,6 +52,7 @@ class TestWalletPasswordChange(unittest.TestCase):
         WalletMainCheZhu(self.driver).go_to_change_pwd()
         wallet_pwd.change_pwd(oldpwd=self.newpwd, newpwd=self.pwd)
         wallet_pwd.confirm_change_pwd()
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
