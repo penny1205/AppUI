@@ -8,6 +8,7 @@ from util.driver.project_decorator import catch_exception
 class WalletMainCheZhu(CheZhu):
     # 我的钱包主页面
     wallet_activity = '.account.MyWalletActivity'
+    __wallet_balance = {'path': 'com.mustang:id/wallet_balance', 'identifyBy': 'id'}  # 钱包余额
     __wallet_detail = {'path': 'com.mustang:id/textview_modify', 'identifyBy': 'id'}  # 钱包明细
     __wallet_cash = {'path': 'com.mustang:id/wallet_withdraw', 'identifyBy': 'id'}  # 提现
     __wallet_consignor = {'path': 'com.mustang:id/pay_select_collection', 'identifyBy': 'id'}  # 委托代收人
@@ -49,3 +50,8 @@ class WalletMainCheZhu(CheZhu):
         # 进入忘记密码页面
         self.driver.click_element(self.__wallet_setting)
         self.driver.click_element(self.__wallet_reset_pwd)
+
+    def get_wallet_balance(self):
+        # 获取钱包余额
+        balance = self.driver.find_element(self.__wallet_balance).text
+        return balance

@@ -43,6 +43,11 @@ class BankCardMainCheZhu(CheZhu):
         # 跳转绑定还款卡页面
         self.driver.click_element(self.__add_repay_card)
 
+    def find_cash_card(self):
+        # 获取当前页面是否存在提现卡
+        state = self.driver.isElement(self.__cash_card)
+        return state
+
 
 if __name__ == '__main__':
     import time

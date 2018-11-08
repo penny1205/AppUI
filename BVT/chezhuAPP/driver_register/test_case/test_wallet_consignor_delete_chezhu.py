@@ -20,19 +20,19 @@ class TestWalletConsignorDelete(unittest.TestCase):
 
     def setUp(self):
         """前置条件准备"""
-        config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
+        self.logger = Log()
+        self.logger.info('########################### TestWalletConsignorDelete START ###########################')
+        config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()  # 获取配置文件
         app_package = config['appPackage_chezhu']
         app_activity = config['appActivity_chezhu']
         # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
-        self.logger = Log()
         self.mobile = config['mobile_register']
-        self.consignor_name = config['consignor_name']
-        self.consignor_idNo = config['consignor_idNo']
-        self.consignor_mobile = config['consignor_mobile']
+        self.consignor_mobile = config['consignor_mobile']  # 委托代收人手机号
+        self.wallet_pwd = config['wallet_pwd_register']  # 钱包密码
         self.driver = AppUiDriver(app_package, app_activity).get_driver()
         self.driver_tools = DriverOperation(self.driver)
         DbOperation().add_wallet_consignor(self.mobile)
-        self.logger.info('########################### TestWalletConsignorDelete START ###########################')
+        self.driver.start_activity(app_activity=app_activity, app_package=app_package)
         pass
 
     def tearDown(self):
@@ -43,13 +43,13 @@ class TestWalletConsignorDelete(unittest.TestCase):
     def test_bvt_wallet_consignor_delete(self):
         """删除委托代收人"""
         wallet_consignor = WalletConsignorCheZhu(self.driver)
-        self.driver_tools.getScreenShot('wallet_consignor_add')
-        MainTabCheZhu(self.driver).goto_person_center()
-        PersonCenterCheZhu(self.driver).goto_user_wallet()
-        WalletMainCheZhu(self.driver).go_to_consignor()
-        WalletPasswordCheZhu(self.driver).send_password('123321')
-        wallet_consignor.go_to_consignor_details()
-        wallet_consignor.delete_consignor()
+        self.driver_tools.getScreenShot('wallet_consignor_delete')
+        MainTabCheZhu(self.driver).goto_person_center()  # 进入用户信息页面
+        PersonCenterCheZhu(self.driver).goto_user_wallet()  # 进入钱包模块
+        WalletMainCheZhu(self.driver).go_to_consignor()  # 进入委托代收人模块
+        WalletPasswordCheZhu(self.driver).send_password(self.wallet_pwd)  # 输入钱包密码
+        wallet_consignor.go_to_consignor_details()  # 进入委托代收人详情页面
+        wallet_consignor.delete_consignor()  # 删除委托代收人
         wait_page = wallet_consignor.wait_consignor_page()
         self.driver_tools.getScreenShot('wallet_consignor_delete')
         self.assertTrue(wait_page)  # 检查操作完成后页面activity是否切换为主列表页

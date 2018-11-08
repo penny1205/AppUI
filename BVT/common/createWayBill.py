@@ -15,10 +15,10 @@ from BVT.common.company_project import CompanyProject
 class CreateWayBill(object):
     """ 创建运单公共方法 """
 
-    def __init__(self, mobile):
+    def __init__(self, mobile, totalAmt='10000', preAmt='1000', oilAmt='1000', destAmt='1000', lastAmt='1000'):
         self.logger = Log()
         self.config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
-        ## URL ##
+        # URL ##
         self.url_create_waybill = 'https://hfuapi.keking.cn:8015/app/payment/saveWayBill'
         self.url_confirm_waybill = 'https://hfuapi.keking.cn:8015/app/payment/tmsConfirmWayBill'
         self.url_arrive_waybill = 'https://hfuapi.keking.cn:8015/app/payment/confirmWayComplete'
@@ -29,8 +29,7 @@ class CreateWayBill(object):
             'YD_OAUTH': str(self.config['wuliuyun_token']),
             'User-Agent': str(self.config['User-Agent'])
         }
-
-        ## 录单信息 ##
+        # 录单信息 ##
         self.mobile = mobile
         # 订单号
         self.upWayBillId = ''
@@ -75,11 +74,11 @@ class CreateWayBill(object):
         self.carModel = 'TE_ZHONG_CHE'  # 车型
         # 运费信息
         self.income = random.randint(0, 10000)  # 发车收入
-        self.totalAmt = '10000'  # 总金额
-        self.preAmt = '1000'  # 预付款
-        self.oilAmt = '1000'  # 油卡金额
-        self.destAmt = '1000'  # 到付金额
-        self.lastAmt = '1000'  # 尾款
+        self.totalAmt = totalAmt  # 总金额
+        self.preAmt = preAmt  # 预付款
+        self.oilAmt = oilAmt  # 油卡金额
+        self.destAmt = destAmt  # 到付金额
+        self.lastAmt = lastAmt  # 尾款
         # 自定义费用
         self.oilCardDeposit = random.randint(0, 9999)  # 油卡押金
         self.handlingFee = random.randint(0, 9999)  # 装卸费

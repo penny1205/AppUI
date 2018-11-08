@@ -105,6 +105,12 @@ class DbOperation(object):
             sql_delete = 'UPDATE YD_APP_PAYMENT_RECEIVER SET isAvailable = 0,isDelete = 1 WHERE id = {0}'.format(id[0])
             self.db.execute_sql(sql_delete)
 
+    def update_wallet_card_state(self, mobile):
+        sql_select = 'SELECT c.id from YD_APP_MYBANK_OPEN_ACCOUNT a LEFT JOIN YD_APP_USER b on a.loginId = b.loginId  LEFT JOIN YD_APP_MYBANK_BIND_CARD c on a.mybankId = c.mybankId where b.mobile = \'{}\' ORDER BY c.id DESC LIMIT 1'.format(mobile)
+        card_id = self.db.execute_select_one_record(sql_select)[0]
+        sql_update = 'UPDATE YD_APP_MYBANK_BIND_CARD SET ifBindCardSuccess = 1, isUsable = 1 WHERE id = {}'.format(card_id)
+        self.db.execute_sql(sql_update)
+
 
 if __name__ == '__main__':
-    user = DbOperation().insert_wallet_consignor(18655148783)
+    DbOperation().update_wallet_card_state(18655148783)

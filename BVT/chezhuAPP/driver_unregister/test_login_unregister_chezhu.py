@@ -25,6 +25,7 @@ class TestLoginUnregister(unittest.TestCase):
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
         self.main_page = MainTabCheZhu(self.driver).activity
         self.driver_tool = DriverOperation(self.driver)
+        self.driver.reset()
         self.logger.info('########################### TestLoginUnregister START ###########################')
         pass
 

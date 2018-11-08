@@ -7,9 +7,7 @@ from util.config.yaml.readyaml import ReadYaml
 from util.file.fileutil import FileUtil
 from util.driver.driver_operation import DriverOperation
 from page_object.chezhu.chezhu_common.main_tab_chezhu import MainTabCheZhu
-from page_object.chezhu.chezhu_userCenter.wallet_consignor_chezhu import WalletConsignorCheZhu
 from page_object.chezhu.chezhu_userCenter.personCenter_chezhu import PersonCenterCheZhu
-from page_object.chezhu.chezhu_common.wallet_password_chezhu import WalletPasswordCheZhu
 from page_object.chezhu.chezhu_userCenter.wallet_main_chezhu import WalletMainCheZhu
 from page_object.chezhu.chezhu_userCenter.wallet_change_pwd_chezhu import WalletChangePwdCheZhu
 from util.driver.driver import AppUiDriver
@@ -20,16 +18,18 @@ class TestWalletPasswordChange(unittest.TestCase):
 
     def setUp(self):
         """前置条件准备"""
+        self.logger = Log()
+        self.logger.info('########################### TestWalletPasswordChange START ###########################')
         config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
         app_package = config['appPackage_chezhu']
         app_activity = config['appActivity_chezhu']
         AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
-        self.logger = Log()
-        self.pwd = '123321'
+        self.pwd = config['wallet_pwd_register']
         self.newpwd = '147369'
         self.driver = AppUiDriver(app_package, app_activity).get_driver()
         self.driver_tools = DriverOperation(self.driver)
-        self.logger.info('########################### TestWalletPasswordChange START ###########################')
+        self.driver.start_activity(app_activity=app_activity, app_package=app_package)
+
         pass
 
     def tearDown(self):

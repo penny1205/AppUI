@@ -18,34 +18,36 @@ class TestWaybillConfirm(unittest.TestCase):
 
     def setUp(self):
         """前置条件准备"""
-        config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
+        self.logger = Log()
+        self.logger.info('########################### TestWaybillConfirm START ###########################')
+        config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()  # 获取配置文件
         app_package = config['appPackage_chezhu']
         app_activity = config['appActivity_chezhu']
         # AppDriver().set_driver(appPackage=app_package, appActivity=app_activity)
-        self.logger = Log()
         self.mobile = config['mobile_register']
-        self.driver = AppUiDriver(app_package, app_activity).get_driver()
-        CreateWayBill(self.mobile).saveWayBill()
-        self.logger.info('########################### TestWaybillConfirm START ###########################')
+        self.driver = AppUiDriver(app_package, app_activity).get_driver()  # 获取appium driver
+        CreateWayBill(self.mobile).saveWayBill()  # 创建运单
+        self.driver.start_activity(app_activity=app_activity, app_package=app_package)  # 重启应用
         pass
 
     def tearDown(self):
         """测试环境重置"""
-        DbOperation().delete_waybill_driver(self.mobile)
+        DbOperation().delete_waybill_driver(self.mobile)  # 删除case中操作的运单
         self.logger.info('########################### TestWaybillConfirm END ###########################')
         pass
 
     def test_bvt_waybill_confirm(self):
         """确认发车操作"""
         self.driver.getScreenShot('waybill_confirm')
-        WaybillMainCheZhu(self.driver).go_to_waybill_detail()
-        WaybillConfirmCheZhu(self.driver).upload_transport_img()
-        WaybillConfirmCheZhu(self.driver).confirm_waybill()
+        WaybillMainCheZhu(self.driver).go_to_waybill_detail()  # 进入运单详情页面 操作确认发车
+        WaybillConfirmCheZhu(self.driver).upload_transport_img()  # 上传运输协议
+        self.driver.getScreenShot('waybill_confirm')
+        WaybillConfirmCheZhu(self.driver).confirm_waybill()  # 确认发车
         wait_page = MainTabCheZhu(self.driver).wait_main_page()
         self.driver.getScreenShot('waybill_confirm')
         self.assertTrue(wait_page)  # 检查操作完成后页面activity是否切换为主列表页
         waybill_state = DbOperation().select_waybill_state(self.mobile)
-        self.assertEqual(waybill_state, 'Y')
+        self.assertEqual(waybill_state, 'Y')  # 判断运单状态是否变为  Y司机已确认
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

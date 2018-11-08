@@ -26,3 +26,9 @@ class WalletPasswordCheZhu(CheZhu):
         for key in pwd:
             self.driver.click_element(pwd_btn[key])
 
+    def confirm_pwd(self):
+        # 密码输入框带有确定按钮
+        __confirm_btn = {'identifyBy': 'id', 'path': 'com.mustang:id/check_payment_password_unbunding'}
+        self.driver.click_element(__confirm_btn)
+
+
