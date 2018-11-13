@@ -7,7 +7,7 @@ from page_object.wuliuyun.wuliuyun import Wuliuyun
 
 class WuLiuYunWaybillTab(Wuliuyun):
 
-    main_tab_activity = '.main.MainTabFragment'  # 运单跟踪主页面activity
+    __main_tab_activity = '.main.MainTabFragment'  # 运单跟踪主页面activity
     __create_waybill = {'identifyBy': 'xpath', 'path': '//android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ImageView'}  # 录单按钮
     __waybill_dfc = {'identifyBy': 'name', 'path': '待发车'}
     __waybill_ysz = {'identifyBy': 'name', 'path': '运输中'}
@@ -57,6 +57,17 @@ class WuLiuYunWaybillTab(Wuliuyun):
     def go_to_waybill_detail(self):
         # 点击运单列表第一条数据，进入发车确认/运单详情页面
         self.driver.click_element(self.__waybill)
+
+    @catch_exception
+    def find_waybill_first(self):
+        # 获取页面第一条运单数据
+        state = self.driver.isElement(self.find_waybill_first)
+        return state
+
+    @catch_exception
+    def wait_main_page(self):
+        wait_state = self.driver.wait_activity(activity=self.__main_tab_activity, timeout=20)
+        return wait_state
 
 
 

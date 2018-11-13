@@ -73,6 +73,7 @@ class DbOperation(object):
             self.db.execute_sql(sql_del)
 
     def select_waybill_state(self, mobile):
+        # 返回运单状态数组
         sql_select = 'SELECT billStatus from YD_APP_TRANSPORTCASH where mobile = {0} and delStatus = 0'.format(mobile)
         state = self.db.execute_select_one_record(sql_select)
         return state
@@ -113,4 +114,5 @@ class DbOperation(object):
 
 
 if __name__ == '__main__':
-    DbOperation().update_wallet_card_state(18655148783)
+    state = DbOperation().select_waybill_state('18056070690')
+    print(state[0])

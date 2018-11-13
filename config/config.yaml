@@ -60,6 +60,10 @@ username_wuliuyun: 18056070690
 password_wuliuyun: 111111
 wuliuyun_wallet_pwd: 123321
 
+### waybill info ###
+employ_driver_mobile: 18056070690
+owner_driver_mobile: 18056070690
+
 # Special loan
 username_specialLoan: zxcs001
 password_specialLoan: 111111

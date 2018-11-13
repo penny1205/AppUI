@@ -16,17 +16,19 @@ class TestLoginUnregister(unittest.TestCase):
 
     def setUp(self):
         """前置条件准备"""
+        self.logger = Log()
+        self.logger.info('########################### TestLoginUnregister START ###########################')
         config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
         app_package = config['appPackage_chezhu']
         app_activity = config['appActivity_chezhu']
         # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
-        self.logger = Log()
+
         self.mobile = config['mobile_unregister']
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
         self.main_page = MainTabCheZhu(self.driver).activity
         self.driver_tool = DriverOperation(self.driver)
         self.driver.reset()
-        self.logger.info('########################### TestLoginUnregister START ###########################')
+
         pass
 
     def tearDown(self):

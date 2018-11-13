@@ -4,24 +4,48 @@
 import unittest
 from util.driver.driver import AppUiDriver
 from util.log.log import Log
+from util.file.fileutil import FileUtil
+from util.config.yaml.readyaml import ReadYaml
+from util.driver.driver_operation import DriverOperation
 from page_object.wuliuyun.login_wuliuyun import LoginWuLiuYun
+from page_object.wuliuyun.wuliuyun_common.notification_wuliuyun import NotificationWuLiuYun
+from page_object.wuliuyun.waybill_tab_wuliuyun import WuLiuYunWaybillTab
 
 
 class TestLogin(unittest.TestCase):
+    # 物流云APP 货主登录
     def setUp(self):
-        self.log = Log()
-        self.driver = AppUiDriver().app_ui_driver(appPackage='com.luchang.lcgc', appActivity='.main.SplashActivity')
-        self.user = 'weibo'
-        self.password = '111111'
-        self.activity = '.main.MainTabFragment'
+        """前置条件准备"""
+        self.logger = Log()
+        self.logger.info('########################### TestLogin START ###########################')
+        config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
+        app_package = config['appPackage_wuliuyun']
+        app_activity = config['appActivity_wuliuyun']
+        # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
+
+        self.user = config['username_wuliuyun']
+        self.password = config['password_wuliuyun']
+        self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
+        self.driver_tool = DriverOperation(self.driver)
+        self.driver.reset()
         pass
 
     def tearDown(self):
+        """测试环境重置"""
+        self.logger.info('########################### TestLogin END ###########################')
         pass
 
     def test_login(self):
-        activity = LoginWuLiuYun(self.driver).user_login(user=self.user, password=self.password)
-        self.assertEqual(activity, self.activity)
+        login = LoginWuLiuYun(self.driver)
+        self.driver_tool.getScreenShot('login_wuliuyun')
+        NotificationWuLiuYun(self.driver).guide_page()
+        self.driver_tool.getScreenShot('login_wuliuyun')
+        login_page = login.wait_login_page()
+        self.assertTrue(login_page)
+        login.user_login(user=self.user, password=self.password)
+        self.driver_tool.getScreenShot('login_wuliuyun')
+        main_page = WuLiuYunWaybillTab(self.driver).wait_main_page()
+        self.assertTrue(main_page)
 
 
 
