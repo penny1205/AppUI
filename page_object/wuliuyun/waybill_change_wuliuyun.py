@@ -19,25 +19,22 @@ class WaybillChangeWuLiuYun(Wuliuyun):
     swipe = SwipeScreen
 
     @catch_exception
-    def change_waybill(self, type, totalAmt, preAmt, oilAmt, destAmt, lastAmt):
-        # 修改运单  type: 0 未发车运单  1 已发车运单
+    def change_waybill(self, totalAmt, preAmt, oilAmt, destAmt, lastAmt):
+        # 修改运单
         self.__total_amt_edt['keys'] = totalAmt
         self.__pre_amt_edt['keys'] = preAmt
         self.__oil_amt_edt['keys'] = oilAmt
         self.__dest_amt_edt['keys'] = destAmt
         self.__last_amt_edt['keys'] = lastAmt
-        if type == 0:
-            self.driver.click_element(self.__change_btn_0)
-        elif type == 1:
-            self.driver.click_element(self.__change_btn_1)
-        else:
-            self.log.error('change_btn type error, type must be int 0 or 1.')
         self.swipe(self.driver).swipe_screen(self.__last_amt_edt)
         self.driver.send_keys(self.__total_amt_edt)
         self.driver.send_keys(self.__pre_amt_edt)
         self.driver.send_keys(self.__oil_amt_edt)
         self.driver.send_keys(self.__dest_amt_edt)
         self.driver.send_keys(self.__last_amt_edt)
+
+    def commit_change(self):
+        # 确认提交
         self.swipe(self.driver).swipe_screen(self.__commit_btn)
         self.driver.click_element(self.__commit_btn)
 
