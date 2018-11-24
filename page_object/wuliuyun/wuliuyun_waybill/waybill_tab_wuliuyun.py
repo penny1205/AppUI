@@ -3,18 +3,19 @@
 # author: vin
 from util.driver.project_decorator import catch_exception
 from page_object.wuliuyun.wuliuyun import Wuliuyun
+from page_object.wuliuyun.wuliuyun_common.notification_wuliuyun import NotificationWuLiuYun
 
 
 class WuLiuYunWaybillTab(Wuliuyun):
 
     __main_tab_activity = '.main.MainTabFragment'  # 运单跟踪主页面activity
     __create_waybill = {'identifyBy': 'xpath', 'path': '//android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ImageView'}  # 录单按钮
-    __waybill_dfc = {'identifyBy': 'name', 'path': '待发车'}
-    __waybill_ysz = {'identifyBy': 'name', 'path': '运输中'}
-    __waybill_ydd = {'identifyBy': 'name', 'path': '已到达'}
-    __waybill_ywc = {'identifyBy': 'name', 'path': '已完成'}
-    __waybill_tracking = {'identifyBy': 'name', 'path': '运单跟踪'}
-    __user_account = {'identifyBy': 'name', 'path': '我的账户'}
+    __waybill_dfc = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"待发车\"]'}
+    __waybill_ysz = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"运输中\"]'}
+    __waybill_ydd = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"已到达\"]'}
+    __waybill_ywc = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"已完成\"]'}
+    __waybill_tracking = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"运单跟踪\"]'}
+    __user_account = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"我的账户\"]'}
     __waybill_view_page = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/waybill_track_viewpager'}  # 运单列表
     __waybill = {'identifyBy': 'xpath', 'path': '//android.widget.ListView/android.widget.LinearLayout[1]'}  # 运单列表第一条数据
 
@@ -67,6 +68,7 @@ class WuLiuYunWaybillTab(Wuliuyun):
     @catch_exception
     def wait_main_page(self):
         wait_state = self.driver.wait_activity(activity=self.__main_tab_activity, timeout=20)
+        NotificationWuLiuYun(self.app_driver).close_waybill_notice()
         return wait_state
 
 

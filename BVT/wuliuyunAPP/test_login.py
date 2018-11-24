@@ -2,14 +2,15 @@
 # -*- coding:utf-8 -*-
 # author: vin
 import unittest
-from util.driver.driver import AppUiDriver
-from util.log.log import Log
-from util.file.fileutil import FileUtil
-from util.config.yaml.readyaml import ReadYaml
-from util.driver.driver_operation import DriverOperation
+
 from page_object.wuliuyun.login_wuliuyun import LoginWuLiuYun
 from page_object.wuliuyun.wuliuyun_common.notification_wuliuyun import NotificationWuLiuYun
-from page_object.wuliuyun.waybill_tab_wuliuyun import WuLiuYunWaybillTab
+from page_object.wuliuyun.wuliuyun_waybill.waybill_tab_wuliuyun import WuLiuYunWaybillTab
+from util.config.yaml.readyaml import ReadYaml
+from util.driver.driver import AppUiDriver
+from util.driver.driver_operation import DriverOperation
+from util.file.fileutil import FileUtil
+from util.log.log import Log
 
 
 class TestLogin(unittest.TestCase):
@@ -42,7 +43,7 @@ class TestLogin(unittest.TestCase):
         self.driver_tool.getScreenShot('login_wuliuyun')
         login_page = login.wait_login_page()
         self.assertTrue(login_page)
-        login.user_login(user=self.user, password=self.password)
+        login.user_login(user=self.user, pwd=self.password)
         self.driver_tool.getScreenShot('login_wuliuyun')
         main_page = WuLiuYunWaybillTab(self.driver).wait_main_page()
         self.assertTrue(main_page)

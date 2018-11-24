@@ -9,3 +9,4 @@ class Wuliuyun(object):
     def __init__(self, driver):
         self.log = Log()
         self.driver = DriverOperation(driver)
+        self.app_driver = driver

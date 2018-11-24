@@ -59,6 +59,13 @@ appActivity_wuliuyun: .main.SplashActivity
 username_wuliuyun: 18056070690
 password_wuliuyun: 111111
 wuliuyun_wallet_pwd: 123321
+shipper_mobile: 18056070690
+
+### shipper card info ###
+shipper_card_no: 6214835495937607
+shipper_card_mobile: 18056070532
+shipper_card_bank_name: '招商银行'
+shipper_card_bank_branch: '测试分行'
 
 ### waybill info ###
 employ_driver_mobile: 18056070690
@@ -67,3 +74,16 @@ owner_driver_mobile: 18056070690
 # Special loan
 username_specialLoan: zxcs001
 password_specialLoan: 111111
+
+
+
+##########Mail Config##########
+#receiver eg:['eamilAddress1@keking.cn','eamilAddress2@keking.cn']
+email_receiver : [ 'liuxinyu@keking.cn']
+#sender
+email_sender : 'ahkj@keking.cn'
+email_sender_pwd : 'KeKing!@#2018'
+#mail server
+email_host : smtp.keking.cn
+#mail title prefix
+email_title : "APP-UI-BVT测试报告"

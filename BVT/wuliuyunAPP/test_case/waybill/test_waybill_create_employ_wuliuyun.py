@@ -2,14 +2,14 @@
 # -*- coding:utf-8 -*-
 # author: vin
 import unittest
-from util.driver.driver import AppUiDriver
-from util.log.log import Log
-from util.file.fileutil import FileUtil
-from util.config.yaml.readyaml import ReadYaml
-from util.driver.driver_operation import DriverOperation
-from page_object.wuliuyun.waybill_create_wuliuyun import WaybillCreateWuLiuYun
-from page_object.wuliuyun.waybill_tab_wuliuyun import WuLiuYunWaybillTab
+from page_object.wuliuyun.wuliuyun_waybill.waybill_create_wuliuyun import WaybillCreateWuLiuYun
 from BVT.common.db_operation import DbOperation
+from page_object.wuliuyun.wuliuyun_waybill.waybill_tab_wuliuyun import WuLiuYunWaybillTab
+from util.config.yaml.readyaml import ReadYaml
+from util.driver.driver import AppUiDriver
+from util.driver.driver_operation import DriverOperation
+from util.file.fileutil import FileUtil
+from util.log.log import Log
 
 
 class TestCreateWaybillEmploy(unittest.TestCase):

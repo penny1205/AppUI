@@ -4,10 +4,12 @@
 
 import random
 import datetime
+import os
 from util.log.log import Log
 from util.http.httpclient import HttpClient
 from util.config.yaml.readyaml import ReadYaml
 from util.file.fileutil import FileUtil
+from util.file.photofileFormat import PhotoFileFormat
 from util.db.dbutil import DBUtil
 from BVT.common.company_project import CompanyProject
 
@@ -219,7 +221,7 @@ class CreateWayBill(object):
         body_dict = {
             'billId': waybillId  # 运单ID
         }
-        response = HttpClient().post_json(self.url_arrive_waybill, body_dict=body_dict, header_dict=self.head_dict)
+        response = HttpClient().post_json(url=self.url_arrive_waybill, body_dict=body_dict, header_dict=self.head_dict)
         self.logger.info('到达确认返回结果：{0}'.format(response.json()))
         return waybillId
 
@@ -230,20 +232,23 @@ class CreateWayBill(object):
         damaged = 'Y'  # 是否有破损 Y：是、N：是
         losted = 'Y'  # 是否丢失 Y：是、N：是
         memo = '自动化测试--回单上传'  # 备注
+        receipt_img = FileUtil.getProjectObsPath() + os.sep+'config'+os.sep+'image'+os.sep+'receipt0.png'
+        receipt0 = PhotoFileFormat().format_photo(receipt_img)
         files = {
             "id": (None, str(waybillId)),  # 运单id
             "abnormal": (None, abnormal),  # 是否有异常 Y：是、N：是
             "damaged": (None, damaged),  # 是否有破损 Y：是、N：是
             "losted": (None, losted),  # 是否丢失 Y：是、N：是
             "memo": (None, memo),  # 备注
-            "type": (None, type),  # S：货主、C：司机
-            "receipt_0": '',  # 回单图片文件
+            "type": (None, 'S'),  # S：货主、C：司机
+            "receipt_0": receipt0  # 回单图片文件
         }
-        response = HttpClient().post_multipart(self.url_upload_receipt, header_dict=self.head_dict, files=files)
+        print(files)
+        response = HttpClient().post_multipart(url=self.url_upload_receipt, header_dict=self.head_dict, files=files)
         self.logger.info('回单上传返回结果： {0}'.format(response.json()))
         return waybillId
 
 
 if __name__ == '__main__':
-    test = CreateWayBill('18655148783').arrive_confirm()
+    test = CreateWayBill('18655148783').upload_receipt()
     print(test.json())

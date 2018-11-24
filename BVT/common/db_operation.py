@@ -112,7 +112,27 @@ class DbOperation(object):
         sql_update = 'UPDATE YD_APP_MYBANK_BIND_CARD SET ifBindCardSuccess = 1, isUsable = 1 WHERE id = {}'.format(card_id)
         self.db.execute_sql(sql_update)
 
+    def shipper_bankcard_del(self, shipper_mobile):
+        # 将用户已绑定银行卡设置为失效
+        sql_select = 'SELECT a.id from YD_APP_SPECIAL_BANK_BIND a LEFT JOIN YD_APP_APPROVAL_USER b on a.loginId = b.loginId where b.mobile = \'{0}\''.format(shipper_mobile)
+        bankcard_ids = self.db.execute_select_many_record(sql_select)
+        if bankcard_ids:
+            for card_id in bankcard_ids:
+                sql_update = 'UPDATE YD_APP_SPECIAL_BANK_BIND SET  cardStatus=\'N\' WHERE (id=\'{0}\')'.format(card_id[0])
+                self.db.execute_sql(sql_update)
+
+    def shipper_bankcard_add(self, shipper_mobile):
+        # 将用户之前绑定的第一张银行卡设置为生效
+        sql_select = 'SELECT a.id from YD_APP_SPECIAL_BANK_BIND a LEFT JOIN YD_APP_APPROVAL_USER b on a.loginId = b.loginId where b.mobile = \'{0}\''.format(
+            shipper_mobile)
+        bankcard_ids = self.db.execute_select_many_record(sql_select)
+        if bankcard_ids:
+            sql_update = 'UPDATE YD_APP_SPECIAL_BANK_BIND SET  cardStatus=\'V\' WHERE (id=\'{0}\')'.format(bankcard_ids[0][0])
+            self.db.execute_sql(sql_update)
+        else:
+            sql_insert = 'INSERT INTO YD_APP_SPECIAL_BANK_BIND (`acctName`, `bankCity`, `bankName`, `bankPrinc`, `cardName`, `cardNo`, `cardStatus`, `cardType`, `createTime`, `idNo`, `idType`, `loginId`, `logoUrl`, `mobile`, `orgCode`, `subbranchBankName`, `bank`) VALUES (\'刘新宇\', \'340100\', \'建设银行\', \'340000\', \'龙卡通\', \'6217001630031143297\', \'V\', \'借记卡\', \'2018-11-09 13:48:22\', \'142201199305027054\', \'01\', \'APPSHIPPER20180829100001MgiIm\', \'http://yudian.ufile.ucloud.com.cn/019bd30c-39bb-4680-a32c-1d8703f90136.jpg?UCloudPublicKey=ucloudtangshd@weifenf.com14355492830001993909323&Expires=&Signature=pPx9/MwLLhB80/JgqSS8UPOeIh8=\', \'18056070532\', \'01050000\', \'测试建设支行\', \'建设银行\')'
+            self.db.execute_sql(sql_insert)
 
 if __name__ == '__main__':
-    state = DbOperation().select_waybill_state('18056070690')
-    print(state[0])
+    state = DbOperation().shipper_bankcard_del('18056070690')
+    # print(state[0])

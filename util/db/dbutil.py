@@ -51,8 +51,10 @@ class DBUtil(object):
             cur = self.connect.cursor()
             cur.execute(query)
             # self.connect.close()
+            data = cur.fetchone()
             cur.close()
-            return cur.fetchone()
+            self.logger.info('select data:{0}'.format(data))
+            return data
         except Exception as e:
             self.logger.info('Execute sql failed ! : {0}'.format(e))
             self.connect.close()
@@ -64,8 +66,10 @@ class DBUtil(object):
         try:
             cur = self.connect.cursor()
             cur.execute(query)
+            data = cur.fetchall()
             self.connect.close()
-            return cur.fetchall()
+            self.logger.info('select data:{0}'.format(data))
+            return data
         except Exception as e:
             self.logger.info('Execute sql failed ! : {0}'.format(e))
             self.connect.close()
@@ -120,7 +124,7 @@ class RedisDb(object):
 if __name__ == '__main__':
     test = RedisDb()
     # code = test.get_code(name='AppLoginVerifyCode', key='"18056070690"')
-    code = test.del_key(name='CHK_ONE_DAY_LOGIN', key= 'all')
+    code = test.get_code(key='"{0}"'.format('18056070532'), name='AppSpecialLineBankBindCode')
     print(code)
     # code = test.get_key('YUDIAN-QUARTZ-JOB-TASK')
     # print(code)

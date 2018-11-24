@@ -40,7 +40,7 @@ class WaybillCreateWuLiuYun(Wuliuyun):
         else:
             self.log.error('Car type is wrong!---type:' + car_type)
             raise
-        self.driver.click_element('id', self.__tv_line)
+        self.driver.click_element(self.__tv_line)
         self.choose_line()
         self.choose_project()
 
@@ -62,7 +62,6 @@ class WaybillCreateWuLiuYun(Wuliuyun):
             self.driver.click_element(self.__rb_isDriver)
         else:
             self.log.error('Car type is wrong!---type:' + car_type)
-            raise
 
     def input_cost_info(self, total='10', pre='1', oil='1', dest='1', last='1'):
         # 录入运费信息
@@ -72,7 +71,7 @@ class WaybillCreateWuLiuYun(Wuliuyun):
         self.__destAmt_input['keys'] = dest
         self.__lastAmt_input['keys'] = last
 
-        self.swipe(self.driver).swipe_screen(self.__lastAmt)
+        self.swipe(self.driver).swipe_screen(self.__lastAmt, self.add_waybill_activity)
         self.driver.send_keys(self.__totalAmt_input)
         self.driver.send_keys(self.__preAmt_input)
         self.driver.send_keys(self.__oilAmt_input)
@@ -116,28 +115,29 @@ class WaybillCreateWuLiuYun(Wuliuyun):
     def add_order_number(self):
         # 填写订单号
         departure_order_number = random.sample(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C"], 8)
-        self.driver.send_keys('id', self.__departure_order_number, departure_order_number)
+        self.__departure_order_number['keys'] = departure_order_number
+        self.driver.send_keys(self.__departure_order_number)
 
     def add_goods(self):
         # 添加货物信息
-        choose_goods_name = 'com.luchang.lcgc:id/goods_name'
-        goods_weight = ['com.luchang.lcgc:id/editview_et', 0]
-        goods_bulk = ['com.luchang.lcgc:id/editview_et', 1]
-        goods_number = ['com.luchang.lcgc:id/editview_et', 2]
-        goods_value = ['com.luchang.lcgc:id/editview_et', 3]
-        goods_charge = ['com.luchang.lcgc:id/editview_et', 4]
-        goods_name = ['com.luchang.lcgc:id/item_text', 0]
-        goods_name_commit = 'com.luchang.lcgc:id/goods_name_commit'
-        commit_button = 'com.luchang.lcgc:id/commit_button'
-        self.driver.send_keys('ids', goods_weight, '6')
-        self.driver.send_keys('ids', goods_bulk, '6')
-        self.driver.send_keys('ids', goods_number, '6')
-        self.driver.send_keys('ids', goods_value, '6')
-        self.driver.send_keys('ids', goods_charge, '6')
-        self.driver.click_element('id', choose_goods_name)
-        self.driver.click_element('ids', goods_name)
-        self.driver.click_element('id', goods_name_commit)
-        self.driver.click_element('id', commit_button)
+        choose_goods_name = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/goods_name'}
+        goods_weight = {'identifyBy': 'ids', 'path': ['com.luchang.lcgc:id/editview_et', 0], 'keys': '6'}
+        goods_bulk = {'identifyBy': 'ids', 'path': ['com.luchang.lcgc:id/editview_et', 1], 'keys': '6'}
+        goods_number = {'identifyBy': 'ids', 'path': ['com.luchang.lcgc:id/editview_et', 2], 'keys': '6'}
+        goods_value = {'identifyBy': 'ids', 'path': ['com.luchang.lcgc:id/editview_et', 3], 'keys': '6'}
+        goods_charge = {'identifyBy': 'ids', 'path': ['com.luchang.lcgc:id/editview_et', 4], 'keys': '6'}
+        goods_name = {'identifyBy': 'ids', 'path': ['com.luchang.lcgc:id/item_text', 0]}
+        goods_name_commit = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/goods_name_commit'}
+        commit_button = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/commit_button'}
+        self.driver.send_keys(goods_weight)
+        self.driver.send_keys(goods_bulk)
+        self.driver.send_keys(goods_number)
+        self.driver.send_keys(goods_value)
+        self.driver.send_keys(goods_charge)
+        self.driver.click_element(choose_goods_name)
+        self.driver.click_element(goods_name)
+        self.driver.click_element(goods_name_commit)
+        self.driver.click_element(commit_button)
 
     def choose_employ_driver(self, mobile):
         # 选择外请车司机

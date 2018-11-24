@@ -64,7 +64,7 @@ class CompanyProject(object):
 
 
 if __name__ == '__main__':
-    project = CompanyProject().get_project()
+    project = CompanyProject().select_project()
     print(project)
     # projects = []
     # for key in project:

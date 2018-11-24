@@ -25,7 +25,7 @@ class WaybillArriveConfirmWuliuyun(Wuliuyun):
             return
 
     @catch_exception
-    def confirm_waybill(self, amt, info):
+    def arrive_confirm_waybill(self, amt, info):
         # 填写到付金额 确认到达
         self.__confirm_amt['keys'] = amt
         self.__confirm_info['keys'] = info

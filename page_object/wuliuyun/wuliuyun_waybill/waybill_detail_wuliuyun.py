@@ -9,10 +9,11 @@ class WuLiuYunWaybillDetail(Wuliuyun):
     # 运单详情页面
     __activity_detail = '.main.WaybillDetailsActivity'
     __back_btn = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"返回\"]'}
-    __cancel_btn = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/rb_employ_car'}  # 取消运单按钮
+    __cancel_btn = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"取消运单\"]'}  # 取消运单按钮
     __confirm_cancel = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/dialog_list_sure'}  # 确认取消运单
-    __change_btn_0 = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/rb_employ_car'}  # 待发车运单，修改运单按钮
+    __change_btn_0 = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/waybill_details_submit_station'}  # 待发车运单，修改运单按钮
     __change_btn_1 = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"修改\"]'}  # 已发车运单，修改运单按钮
+    __waybill_submit = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/waybill_details_submit'}  # 详情页面底部操作按钮
 
     def wait_detail_page(self):
         state = self.driver.wait_activity(self.__activity_detail)
@@ -30,3 +31,6 @@ class WuLiuYunWaybillDetail(Wuliuyun):
     def cancel_waybill(self):
         self.driver.click_element(self.__cancel_btn)
         self.driver.click_element(self.__confirm_cancel)
+
+    def operating_waybill(self):
+        self.driver.click_element(self.__waybill_submit)
