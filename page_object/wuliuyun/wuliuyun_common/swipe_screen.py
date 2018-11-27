@@ -10,7 +10,7 @@ class SwipeScreen(Wuliuyun):
     def swipe_screen(self, element, activity):
         # 滑动屏幕直到指定的元素出现
         if self.driver.wait_activity(activity):
-            self.log.info('start find the element:{0}'.format(activity))
+            self.log.info('start find the page:{0}'.format(activity))
             while not self.driver.isElement(element):
                 self.driver.swipe_window(x1=0.5, y1=0.9, x2=0.5, y2=0.5)
             else:

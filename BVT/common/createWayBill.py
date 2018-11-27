@@ -228,27 +228,29 @@ class CreateWayBill(object):
     def upload_receipt(self):
         # 对运单进行回单上传操作
         waybillId = self.arrive_confirm()
+        waybillId = str(waybillId)
         abnormal = 'Y'  # 是否有异常 Y：是、N：是
         damaged = 'Y'  # 是否有破损 Y：是、N：是
         losted = 'Y'  # 是否丢失 Y：是、N：是
         memo = '自动化测试--回单上传'  # 备注
         receipt_img = FileUtil.getProjectObsPath() + os.sep+'config'+os.sep+'image'+os.sep+'receipt0.png'
-        receipt0 = PhotoFileFormat().format_photo(receipt_img)
+        # receipt0 = PhotoFileFormat().format_photo(receipt_img)
         files = {
-            "id": (None, str(waybillId)),  # 运单id
+            "id": (None, waybillId),  # 运单id
             "abnormal": (None, abnormal),  # 是否有异常 Y：是、N：是
             "damaged": (None, damaged),  # 是否有破损 Y：是、N：是
             "losted": (None, losted),  # 是否丢失 Y：是、N：是
             "memo": (None, memo),  # 备注
-            "type": (None, 'S'),  # S：货主、C：司机
-            "receipt_0": receipt0  # 回单图片文件
+            "type": (None, "S"),  # S：货主、C：司机
+            "receipt_0": ("receipt.png", open(receipt_img, 'rb'), 'image/png')  # 回单图片文件
         }
-        print(files)
+        self.head_dict.pop('content-type')
         response = HttpClient().post_multipart(url=self.url_upload_receipt, header_dict=self.head_dict, files=files)
+        self.logger.info('回单上传请求： {0}'.format(response.request.headers))
         self.logger.info('回单上传返回结果： {0}'.format(response.json()))
-        return waybillId
+        # return waybillId
 
 
 if __name__ == '__main__':
-    test = CreateWayBill('18655148783').upload_receipt()
-    print(test.json())
+    CreateWayBill('18655148783').upload_receipt()
+    # print(test.json())

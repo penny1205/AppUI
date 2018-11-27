@@ -43,7 +43,7 @@ class UserBankcardAddWuliuyun(Wuliuyun):
     def add_card_confirm(self, mobile):
         mobile_code = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/add_bankcard_verificationCode'}
         confirm_btn = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/add_bankcard_verificationCode_next'}
-        time.sleep(0.1)
+        time.sleep(0.5)
         code = RedisDb().get_code(key='"{0}"'.format(mobile), name='AppSpecialLineBankBindCode')
         mobile_code['keys'] = code
         self.driver.send_keys(mobile_code)

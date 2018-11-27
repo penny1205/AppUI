@@ -9,7 +9,7 @@ from page_object.wuliuyun.wuliuyun_common.notification_wuliuyun import Notificat
 class WuLiuYunWaybillTab(Wuliuyun):
 
     __main_tab_activity = '.main.MainTabFragment'  # 运单跟踪主页面activity
-    __create_waybill = {'identifyBy': 'xpath', 'path': '//android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ImageView'}  # 录单按钮
+    __create_waybill = {'identifyBy': 'xpath', 'path': '//android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ImageView[2]'}  # 录单按钮
     __waybill_dfc = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"待发车\"]'}
     __waybill_ysz = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"运输中\"]'}
     __waybill_ydd = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"已到达\"]'}

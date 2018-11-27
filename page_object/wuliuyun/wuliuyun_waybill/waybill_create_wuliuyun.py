@@ -23,12 +23,13 @@ class WaybillCreateWuLiuYun(Wuliuyun):
     __rb_isDriver = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/rb_isDriver'}  # 有回单按钮
     __totalAmt = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"运费总额 (元)\"]'}  # 运费总额
     __lastAmt = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"尾款金额 (元)\"]'}  # 尾款
-    __totalAmt_input = {'identifyBy': 'ids', 'path': ['com.luchang.lcgc:id/editview_rect', 2]}
-    __preAmt_input = {'identifyBy': 'ids', 'path': ['com.luchang.lcgc:id/editview_rect', 3]}
-    __oilAmt_input = {'identifyBy': 'ids', 'path': ['com.luchang.lcgc:id/editview_rect', 4]}
-    __destAmt_input = {'identifyBy': 'ids', 'path': ['com.luchang.lcgc:id/editview_rect', 5]}
-    __lastAmt_input = {'identifyBy': 'ids', 'path': ['com.luchang.lcgc:id/editview_rect', 6]}
-    __commit_button = {'identifyBy': 'ids', 'path': 'com.luchang.lcgc:id/commit_button'}
+    __totalAmt_input = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/total_amount_edt'}
+    __preAmt_input = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/pre_amount_edt'}
+    __oilAmt_input = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/oil_amount_edt'}
+    __destAmt_input = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/dest_amount_edt'}
+    __lastAmt_input = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/last_amount_edt'}
+    __commit_button = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/commit_button'}
+    __trans_photo ={'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/transfer_proto_image'}
     swipe = SwipeScreen
 
     def input_basic_info(self, car_type):
@@ -54,11 +55,11 @@ class WaybillCreateWuLiuYun(Wuliuyun):
         if car_type == '1':
             self.driver.click_element(self.__employ_driver_phone)
             self.choose_employ_driver(mobile)
-            self.swipe(self.driver).swipe_screen(self.__rb_nonDriver)
+            self.swipe(self.app_driver).swipe_screen(self.__rb_nonDriver, self.add_waybill_activity)
             self.driver.click_element(self.__rb_isDriver)
         elif car_type == '2':
             self.choose_owner_driver(mobile)
-            self.swipe(self.driver).swipe_screen(self.__rb_nonDriver)
+            self.swipe(self.app_driver).swipe_screen(self.__rb_nonDriver, self.add_waybill_activity)
             self.driver.click_element(self.__rb_isDriver)
         else:
             self.log.error('Car type is wrong!---type:' + car_type)
@@ -70,16 +71,17 @@ class WaybillCreateWuLiuYun(Wuliuyun):
         self.__oilAmt_input['keys'] = oil
         self.__destAmt_input['keys'] = dest
         self.__lastAmt_input['keys'] = last
-
-        self.swipe(self.driver).swipe_screen(self.__lastAmt, self.add_waybill_activity)
+        self.swipe(self.app_driver).swipe_screen(self.__preAmt_input, self.add_waybill_activity)
         self.driver.send_keys(self.__totalAmt_input)
         self.driver.send_keys(self.__preAmt_input)
+        self.swipe(self.app_driver).swipe_screen(self.__trans_photo, self.add_waybill_activity)
         self.driver.send_keys(self.__oilAmt_input)
         self.driver.send_keys(self.__destAmt_input)
         self.driver.send_keys(self.__lastAmt_input)
 
     def commit_waybill_info(self):
         # 提交录单信息
+        self.swipe(self.app_driver).swipe_screen(self.__commit_button, self.add_waybill_activity)
         self.driver.click_element(self.__commit_button)
 
     def choose_line(self):
@@ -90,7 +92,7 @@ class WaybillCreateWuLiuYun(Wuliuyun):
         sendCity = {'identifyBy': 'xpath',
                     'path': '//android.support.v7.widget.RecyclerView/android.widget.LinearLayout[1]/android.widget.TextView[1]'}
         sendDistrict = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"不限\"]'}
-        line_arrive_city = {'identifyBy': 'xpath', 'path': 'line_arrive_city'}
+        line_arrive_city = {'identifyBy': 'id', 'path': 'line_arrive_city'}
         arriveProvince = {'identifyBy': 'xpath', 'path': '//android.widget.TextView[@text=\"天津\"]'}
         arriveCity = {'identifyBy': 'xpath',
                       'path': '//android.support.v7.widget.RecyclerView/android.widget.LinearLayout[1]/android.widget.TextView[1]'}
@@ -152,11 +154,12 @@ class WaybillCreateWuLiuYun(Wuliuyun):
 
     def choose_owner_driver(self, mobile):
         # 选择公司车司机
+        car_info = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/car_info'}
         owner_car = {'identifyBy': 'xpath',
                      'path': '//android.widget.ListView[@resource-id=\"android:id/list\"]/android.widget.LinearLayout[1]'}  # 公司车列表第一条
         self.__owner_driver_phone['keys'] = mobile
         self.driver.send_keys(self.__owner_driver_phone)  # 输入公司车司机手机号
-        self.driver.click_element(self.__owner_car)  # 选择车辆
+        self.driver.click_element(car_info)  # 选择车辆
         self.driver.click_element(owner_car)
 
 

@@ -10,11 +10,12 @@ class WaybillReceiptConfirmWuliuyun(Wuliuyun):
     # 回单确认页面
     __receipt_confirm_activity = '.main.ReceiptConfirmActivity'
     __add_receipt_img = {'identifyBy': 'xpath', 'path': '//android.widget.GridView/android.widget.LinearLayout[2]'}
-    __choose_img = {'identifyBy': 'path', 'path': '//android.widget.Button[@text=\"选择图片\"]'}  # 选择图片
-    __del_receipt_img = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/waybill_track_wait_start'}  # 删除图片
+    __choose_img = {'identifyBy': 'xpath', 'path': '//android.widget.Button[@text=\"选择图片\"]'}  # 选择图片
+    __del_receipt_img = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/multi_select_item_close'}  # 删除图片
     __del_confirm_btn = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/dialog_sure'}  # 确认删除
-    __confirm_info = {'identifyBy': 'class', 'path': 'android.widget.EditText'}  # 确认备注
+    __confirm_info = {'identifyBy': 'class', 'path': 'android.widget.EditText'}  # 回单确认备注
     __submit_btn = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/receipt_confirm_picture_submit'}  # 回单确认无误按钮
+    __confirm_btn = {'identifyBy': 'id', 'path': 'com.luchang.lcgc:id/dialog_amount_submit'}  # 回单确认
 
     @catch_exception
     def wait_confirm_page(self):
@@ -32,6 +33,7 @@ class WaybillReceiptConfirmWuliuyun(Wuliuyun):
     def del_receipt_image(self):
         # 删除照片
         self.driver.click_element(self.__del_receipt_img)
+        self.driver.click_element(self.__del_confirm_btn)
 
     @catch_exception
     def add_confirm_info(self):
@@ -44,4 +46,5 @@ class WaybillReceiptConfirmWuliuyun(Wuliuyun):
     def confirm_receipt(self):
         #  回单确认
         self.driver.click_element(self.__submit_btn)
+        self.driver.click_element(self.__confirm_btn)
 

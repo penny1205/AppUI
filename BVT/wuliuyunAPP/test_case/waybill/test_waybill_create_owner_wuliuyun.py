@@ -38,6 +38,7 @@ class TestCreateWaybillOwner(unittest.TestCase):
     def test_create_waybill_owner(self):
         # 新建公司车运单
         create_waybill = WaybillCreateWuLiuYun(self.driver)
+        WuLiuYunWaybillTab(self.driver).go_to_create_waybill()
         self.driver_tool.getScreenShot('test_create_waybill_owner')
         create_waybill.input_basic_info(car_type='2')
         create_waybill.input_goods_info()
@@ -51,6 +52,6 @@ class TestCreateWaybillOwner(unittest.TestCase):
         self.assertEqual(waybill, 'W')
 
 
-
-
+if __name__ == '__main__':
+    unittest.main(verbosity=1)
 

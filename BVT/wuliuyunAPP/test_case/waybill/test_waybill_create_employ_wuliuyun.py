@@ -21,7 +21,7 @@ class TestCreateWaybillEmploy(unittest.TestCase):
         config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
         app_package = config['appPackage_wuliuyun']
         app_activity = config['appActivity_wuliuyun']
-        # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
+        # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()  # 单例测试 启动driver
         self.employ_driver = config['employ_driver_mobile']
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
         self.driver_tool = DriverOperation(self.driver)
@@ -38,6 +38,8 @@ class TestCreateWaybillEmploy(unittest.TestCase):
     def test_create_waybill_employ(self):
         # 新建外请车运单
         create_waybill = WaybillCreateWuLiuYun(self.driver)
+        WuLiuYunWaybillTab(self.driver).wait_main_page()
+        WuLiuYunWaybillTab(self.driver).go_to_create_waybill()
         self.driver_tool.getScreenShot('test_create_waybill_employ')
         create_waybill.input_basic_info(car_type='1')
         create_waybill.input_goods_info()
@@ -51,6 +53,6 @@ class TestCreateWaybillEmploy(unittest.TestCase):
         self.assertEqual(waybill, 'W')
 
 
-
-
+if __name__ == '__main__':
+    unittest.main(verbosity=1)
 
