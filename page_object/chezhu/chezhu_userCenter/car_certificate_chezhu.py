@@ -32,6 +32,7 @@ class CarCertificateCheZhu(CheZhu):
     __choose_photos = {'identifyBy': 'id', 'path': 'com.mustang:id/select_from_album'}
     __take_photos = {'identifyBy': 'id', 'path': 'com.mustang:id/image_direct_scan'}
     __cancel_btn = {'identifyBy': 'id', 'path': 'com.mustang:id/image_cancel_btn'}
+    __choose_photos_secound = {'identifyBy': 'id', 'path': 'com.mustang:id/choose_image_text'}
 
     @catch_exception
     def wait_page(self):
@@ -45,7 +46,7 @@ class CarCertificateCheZhu(CheZhu):
     @catch_exception
     def upload_car_img_second(self):
         self.driver.click_element(self.__car_img_second)
-        self.driver.click_element(self.__choose_photos)
+        self.driver.click_element(self.__choose_photos_secound)
 
     @catch_exception
     def input_car_number(self, carNo='A123456'):

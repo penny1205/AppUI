@@ -39,7 +39,7 @@ class TestBankCardDelete(unittest.TestCase):
         self.logger.info('########################### TestBankCardDelete END ###########################')
         pass
 
-    @unittest.skip()
+    @unittest.skip('提现卡绑定状态记录在支付网关无法主动修改')
     def test_bvt_bankcard_delete(self):
         """提现银行卡解绑"""
         bankcard = BankCardMainCheZhu(self.driver)

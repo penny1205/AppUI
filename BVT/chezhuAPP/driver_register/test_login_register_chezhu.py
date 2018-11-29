@@ -5,6 +5,7 @@ import unittest
 from util.log.log import Log
 from util.config.yaml.readyaml import ReadYaml
 from util.file.fileutil import FileUtil
+from util.db.dbutil import RedisDb
 from page_object.chezhu.chezhu_common.main_tab_chezhu import MainTabCheZhu
 from page_object.chezhu.chezhu_common.notification_chezhu import NotificationCheZhu
 from page_object.chezhu.chezhu_login.login_chezhu import LoginCheZhu
@@ -22,11 +23,11 @@ class TestLoginRegister(unittest.TestCase):
         config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()  # 获取配置
         app_package = config['appPackage_chezhu']
         app_activity = config['appActivity_chezhu']
-        # AppDriver(appPackage=app_package, appActivity=app_activity).set_driver()
+        # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()  # 单例执行，创建driver
         self.mobile = config['mobile_register']
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()  # 获取appium driver
-        self.main_page = MainTabCheZhu(self.driver).activity
         self.driver_tool = DriverOperation(self.driver)
+        RedisDb().del_key(name='CHK_ONE_DAY_LOGIN', key='all')  # 清除当日APP登录设备记录
         self.driver.reset()  # 初始化APP  清除用户数据
         pass
 
@@ -41,10 +42,10 @@ class TestLoginRegister(unittest.TestCase):
         NotificationCheZhu(self.driver).guide_page()  # 引导页操作
         self.driver_tool.getScreenShot('login_register_chezhu')
         LoginCheZhu(self.driver).user_login(self.mobile)  # 登录操作
-        activity = self.driver_tool.get_activity
         self.driver_tool.getScreenShot('login_register_chezhu')
-        self.assertEqual(self.main_page, activity)  # 检查登录操作后页面activity是否切换为主列表页
+        page_state = MainTabCheZhu(self.driver).wait_main_page()
+        self.assertTrue(page_state)  # 检查登录操作后页面activity是否切换为主列表页
 
 
 if __name__ == '__main__':
-    unittest.main(verbosity=2)
+    unittest.main(verbosity=1)

@@ -10,8 +10,8 @@ class MainTabCheZhu(CheZhu):
     def __init__(self, driver):
         CheZhu.__init__(self, driver)
         self.activity = '.account.MainTabFragment'  # 运单跟踪主页面activity
-        self.ads_img = {'path': 'com.mustang:id/iv_ads_img', 'identifyBy': 'id'}
-        self.ads_close = {'path': 'com.mustang:id/close', 'identifyBy': 'id'}
+        self.ads_img = {'path': 'com.mustang:id/imageview', 'identifyBy': 'id'}
+        self.ads_close = {'path': 'com.mustang:id/close_iv', 'identifyBy': 'id'}
         self.msg_button = {'path': 'com.mustang:id/title_set_img', 'identifyBy': 'id'}  # 消息中心按钮
         self.waybill = {
             'path': "//android.widget.TextView[@resource-id=\"com.mustang:id/textview\" and @text=\"运单收款\"]",
@@ -22,6 +22,7 @@ class MainTabCheZhu(CheZhu):
         self.person_center = {
             'path': "//android.widget.TextView[@resource-id=\"com.mustang:id/textview\" and @text=\"我的\"]",
             'identifyBy': 'xpath'}
+        self.close_driver_loan_ads()
 
     @catch_exception
     def wait_main_page(self):

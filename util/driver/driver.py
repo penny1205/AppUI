@@ -31,10 +31,9 @@ class AppUiDriver(object):
             driver = webdriver.Remote('http://localhost:%d/wd/hub' % self.appium_port, self.desired_caps)
             self.log.info('Successful device connection.')
             driver.implicitly_wait(10)
-        except Exception as e:
+        except Exception as err:
             self.log.error('Failed device connection...')
-            self.log.error(e)
-            driver.quit()
+            self.log.error(err)
             raise
 
     def get_driver(self):
@@ -42,6 +41,6 @@ class AppUiDriver(object):
 
 
 if __name__ == '__main__':
-    driver = AppUiDriver().app_ui_driver(appPackage='com.luchang.lcgc', appActivity='.main.SplashActivity')
+    driver = AppUiDriver(appPackage='com.luchang.lcgc', appActivity='.main.SplashActivity').app_ui_driver()
     driver.start_activity()
     print(driver.current_activity)

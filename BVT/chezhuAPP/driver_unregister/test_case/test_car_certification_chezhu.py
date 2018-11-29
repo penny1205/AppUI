@@ -19,17 +19,17 @@ class TestCarCertification(unittest.TestCase):
 
     def setUp(self):
         """前置条件准备"""
+        self.logger = Log()
+        self.logger.info('########################### TestCarCertification START ###########################')
         config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
         app_package = config['appPackage_chezhu']
         app_activity = config['appActivity_chezhu']
         # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
         self.mobile = config['mobile_unregister']
-        self.logger = Log()
         self.db = DbOperation()
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
         self.db.update_driver_info()
         self.driver.start_activity(app_activity=app_activity, app_package=app_package)
-        self.logger.info('########################### TestCarCertification START ###########################')
         pass
 
     def tearDown(self):
@@ -42,18 +42,18 @@ class TestCarCertification(unittest.TestCase):
         """车辆认证"""
         car_certificate = CarCertificateCheZhu(self.driver)
         choosePhoto = ChoosePhotoCheZhu(self.driver)
-        MainTabCheZhu(self.driver).goto_person_center()
-        PersonCenterCheZhu(self.driver).goto_certification_page()
-        car_certificate.upload_car_img_first()
+        MainTabCheZhu(self.driver).goto_person_center()  # 进入个人中心
+        PersonCenterCheZhu(self.driver).goto_certification_page()  # 进入认证页面
+        car_certificate.upload_car_img_first()  # 选择行驶证正面照片
         choosePhoto.choose_driving_license_front()
-        car_certificate.upload_car_img_second()
+        car_certificate.upload_car_img_second()  # 选择行驶证反面照片
         choosePhoto.choose_id_card_back()
         car_certificate.input_car_number()
         car_certificate.choose_car_info()
         car_certificate.submit_car_info()
         WalletOpenCheZhu(self.driver).wait_page()
         driver_info = self.db.select_driver_info(self.mobile)
-        self.assertEqual('Y', driver_info['isCarCertifacate'])
+        self.assertEqual('Y', driver_info['isCarCertificate'])
 
 
 if __name__ == '__main__':

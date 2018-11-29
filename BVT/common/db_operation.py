@@ -13,9 +13,6 @@ class DbOperation(object):
                          user=self.config['Mysql_user'], passwd=self.config['Mysql_passwd'],
                          dbname=self.config['Mysql_dbname'], charset=self.config['Mysql_charset'])
 
-    def update(self, sql):
-        self.db.execute_sql(sql)
-
     def select_driver_info(self, mobile):
         data_dict = {}
         sql = 'SELECT idNo,name,isCertifacate,pyAuthFlag,carNo,isCarCertificate from YD_APP_USER where mobile = \'{0}\' and source = \'register\''.format(
@@ -47,9 +44,8 @@ class DbOperation(object):
               ' and `source`=\'register\')'.format(idNo, name, custId, mobile)
         self.db.execute_sql(sql)
 
-    def certificate_driver_info(self):
+    def certificate_driver_info(self, mobile):
         custId = self.config['custId_unregister']
-        mobile = self.config['mobile_unregister']
         name = self.config['name_unregister']
         idNo = self.config['idNo_unregister']
         sql = 'UPDATE `YD_APP_USER` SET `carNo`=\'皖A12345\', `idNo`={0}, `name`=\'{1}\', `portraitId`=NULL, `coreLoginId`={0},' \
@@ -58,11 +54,20 @@ class DbOperation(object):
               ' and `source`=\'register\')'.format(idNo, name, custId, mobile)
         self.db.execute_sql(sql)
 
-    def delete_wallet_driver(self):
-        mobile = self.config['mobile_unregister']
-        sql = 'UPDATE `YD_APP_MYBANK_OPEN_ACCOUNT` SET `accountOpened`=0 WHERE (`mobile`=\'{0}\' AND `accountOpened`=1);'.format(
-            mobile)
-        self.db.execute_sql(sql)
+    def select_wallet_state(self, mobile):
+        # 查询手机号已开通钱包个数
+        sql_select = 'select COUNT(*) FROM YD_APP_MYBANK_OPEN_ACCOUNT where mobile = \'{0}\' and accountOpened = 1'.format(mobile)
+        state = self.db.execute_select_one_record(sql_select)[0]
+        return state
+
+    def delete_wallet_driver(self, mobile):
+        sql_select = 'SELECT id from YD_APP_MYBANK_OPEN_ACCOUNT where mobile =\'{0}\''.format(mobile)
+        ids = self.db.execute_select_many_record(sql_select)
+        print(ids)
+        if ids:
+            for id in ids:
+                sql_del = 'DELETE FROM `YD_APP_MYBANK_OPEN_ACCOUNT` WHERE id=\'{0}\' '.format(id[0])
+                self.db.execute_sql(sql_del)
 
     def delete_waybill_driver(self, mobile):
         sql_select = 'SELECT id from YD_APP_TRANSPORTCASH where mobile = {0} and delStatus = 0'.format(mobile)
@@ -74,7 +79,7 @@ class DbOperation(object):
 
     def select_waybill_state(self, mobile):
         # 返回运单状态数组
-        sql_select = 'SELECT billStatus from YD_APP_TRANSPORTCASH where mobile = {0} and delStatus = 0'.format(mobile)
+        sql_select = 'SELECT billStatus from YD_APP_TRANSPORTCASH where mobile = {0} and delStatus = 0 and partnerNo = \'jUTViKluU\''.format(mobile)
         state = self.db.execute_select_one_record(sql_select)
         return state
 
@@ -134,5 +139,5 @@ class DbOperation(object):
             self.db.execute_sql(sql_insert)
 
 if __name__ == '__main__':
-    state = DbOperation().shipper_bankcard_del('18056070690')
+    state = DbOperation().delete_wallet_driver('18000001111')
     # print(state[0])

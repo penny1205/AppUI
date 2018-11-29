@@ -18,19 +18,17 @@ class UnregisterDriverCaseSuit(object):
         config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
         app_package = config['appPackage_chezhu']
         app_activity = config['appActivity_chezhu']
-        AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
+        # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
 
-    def case_suite_runner(self):
+    def case_suite_unregister(self):
         test_suite = unittest.makeSuite(TestLoginUnregister)
         test_suite.addTest(
             UnitTestUtil().discover_pattern(FileUtil.getProjectObsPath() + '/BVT/chezhuAPP/driver_unregister/test_case',
                                             'test*.py'))
-        test_suite.addTest(unittest.makeSuite(TestLogout))
         # test_suite.addTest(TestLoginRegister('test_bvt_login_register'))
         # test_suit = test_suit + UnitTestUtil().discover_pattern(
         #     FileUtil.getProjectObsPath() + '/BVT/chezhuAPP/driver_register/test_case', 'test*.py')
-        print(test_suite)
-        unittest.TextTestRunner().run(test_suite)
+        return test_suite
 
 
 if __name__ == '__main__':

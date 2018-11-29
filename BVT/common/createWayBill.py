@@ -97,13 +97,14 @@ class CreateWayBill(object):
 
     def select_waybill(self):
         # 查找待发车运单
-        db = DBUtil(host=self.config['db_host'], port=self.config['db_port'],
-                    user=self.config['db_user'], passwd=self.config['db_passwd'],
-                    dbname=self.config['db_dbname'], charset=self.config['db_charset'])
+        db = DBUtil(host=self.config['Mysql_host'], port=self.config['Mysql_port'],
+                    user=self.config['Mysql_user'], passwd=self.config['Mysql_passwd'],
+                    dbname=self.config['Mysql_dbname'], charset=self.config['Mysql_charset'])
         sql = 'SELECT * from YD_APP_TRANSPORTCASH where mobile = \'{0}\' AND partnerNo = \'{1}\' AND billStatus = \'W\' AND delStatus = 0'.format(
             self.mobile, self.partnerNo)
-        waybill = db.execute_select_one_record(sql)[0]
-        return waybill
+        waybill = db.execute_select_one_record(sql)
+        if waybill:
+            return waybill[0]
 
     def delete_waybill(self):
         # 删除待发车运单
@@ -252,5 +253,5 @@ class CreateWayBill(object):
 
 
 if __name__ == '__main__':
-    CreateWayBill('18655148783').upload_receipt()
-    # print(test.json())
+    test = CreateWayBill('18056070690').saveWayBill()
+    print(test.json())

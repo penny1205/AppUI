@@ -3,11 +3,12 @@
 # author: vin
 from page_object.chezhu.chezhu import CheZhu
 from util.driver.project_decorator import catch_exception
+from page_object.wuliuyun.wuliuyun_common.swipe_screen import SwipeScreen
 
 
 class PersonCenterCheZhu(CheZhu):
     #  我的页面
-
+    __main_activity = '.account.MainTabFragment'  # 运单跟踪主页面activity
     __user_info = {'path': 'com.mustang:id/my_info_layout', 'identifyBy': 'id'}  # 个人信息
     __user_wallet = {'path': 'com.mustang:id/account_notice_wallet_account', 'identifyBy': 'id'}  # 司机钱包
     __account_bill = {'path': 'com.mustang:id/account_bill_layout', 'identifyBy': 'id'}  # 我的账单
@@ -44,6 +45,7 @@ class PersonCenterCheZhu(CheZhu):
     @catch_exception
     def goto_setting_page(self):
         # 设置页面
+        SwipeScreen(self.app_driver).swipe_screen(self.__setting, self.__main_activity)
         self.driver.click_element(self.__setting)
 
     @catch_exception

@@ -23,7 +23,7 @@ class TestWalletPasswordChange(unittest.TestCase):
         config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
         app_package = config['appPackage_chezhu']
         app_activity = config['appActivity_chezhu']
-        AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
+        # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
         self.pwd = config['wallet_pwd_register']
         self.newpwd = '147369'
         self.driver = AppUiDriver(app_package, app_activity).get_driver()

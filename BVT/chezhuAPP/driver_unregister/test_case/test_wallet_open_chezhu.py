@@ -17,22 +17,23 @@ class TestWalletOpen(unittest.TestCase):
 
     def setUp(self):
         """前置条件准备"""
+        self.logger = Log()
+        self.logger.info('########################### TestWalletOpen START ###########################')
         config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
         app_package = config['appPackage_chezhu']
         app_activity = config['appActivity_chezhu']
-        AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
-        self.logger = Log()
+        # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
         self.db = DbOperation()
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
         self.mobile = config['mobile_unregister']
-        self.db.certificate_driver_info()
+        self.db.certificate_driver_info(self.mobile)
+        self.db.delete_wallet_driver(self.mobile)
         self.driver.start_activity(app_activity=app_activity, app_package=app_package)
-        self.logger.info('########################### TestWalletOpen START ###########################')
         pass
 
     def tearDown(self):
         """测试环境重置"""
-        self.db.delete_wallet_driver()
+        self.db.delete_wallet_driver(self.mobile)
         self.db.initialize_driver_info(self.mobile)
         self.logger.info('########################### TestWalletOpen END ###########################')
         pass
@@ -46,9 +47,7 @@ class TestWalletOpen(unittest.TestCase):
         wallet.set_pwd()
         page_wait = MainTabCheZhu(self.driver).wait_main_page()
         self.assertTrue(page_wait)
-        sql = 'select COUNT(*) FROM YD_APP_MYBANK_OPEN_ACCOUNT where mobile = \'{0}\' and accountOpened = 1'.format(
-            self.mobile)
-        wallet_type = self.db.update(sql)
+        wallet_type = DbOperation().select_wallet_state(self.mobile)
         self.assertEqual('1', str(wallet_type))
 
 

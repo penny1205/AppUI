@@ -20,12 +20,12 @@ class TestWalletCash(unittest.TestCase):
 
     def setUp(self):
         """前置条件准备"""
+        self.logger = Log()
         self.logger.info('########################### TestWalletCash START ###########################')
         config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
         app_package = config['appPackage_chezhu']
         app_activity = config['appActivity_chezhu']
         # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
-        self.logger = Log()
         self.mobile = config['mobile_register']
         self.wallet_pwd = config['wallet_pwd_register']
         self.driver = AppUiDriver(app_package, app_activity).get_driver()
@@ -38,7 +38,7 @@ class TestWalletCash(unittest.TestCase):
         """测试环境重置"""
         self.logger.info('########################### TestWalletCash END ###########################')
         pass
-
+    @unittest.skip('skip cash case')
     def test_bvt_wallet_cash(self):
         """钱包提现"""
         wallet = WalletMainCheZhu(self.driver)

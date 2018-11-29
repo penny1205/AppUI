@@ -41,13 +41,13 @@ if __name__ == '__main__':
         bvtcases = WuliuyunCaseSuit().case_suite()
 
         ReportUtil().generate_report(bvtcases, config['email_title'] + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), 'qa testing report', FileUtil.getProjectObsPath() + '/report/report.html')
-        reader = open(FileUtil.getProjectObsPath() + '/report/report.html', 'rb')
+        reader = open(FileUtil.getProjectObsPath() + '/report/report_wuliuyun.html', 'rb')
         mail_body = reader.read()
         reader.close()
         SendMail().send_mail(config['email_receiver'], config['email_sender'], config['email_sender_pwd'],
                              config['email_host'], config['email_title'] +
                              time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())), mail_body,
-                             {FileUtil.getProjectObsPath() + '/report/report.html'})
+                             {FileUtil.getProjectObsPath() + '/report/report_wuliuyun.html'})
         print('BvtCase run success!')
     except Exception:
         print('BvtCase run fail!')

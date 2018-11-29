@@ -13,7 +13,8 @@ class DriverOperation(object):
         self.log = Log()
 
     def get_activity(self):
-        return self.auto_driver.current_activity
+        activity = self.auto_driver.current_activity
+        return activity
 
     def find_element(self, element):
         # 返回元素

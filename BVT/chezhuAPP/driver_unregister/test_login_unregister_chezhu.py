@@ -5,10 +5,12 @@ import unittest
 from util.log.log import Log
 from util.config.yaml.readyaml import ReadYaml
 from util.file.fileutil import FileUtil
+from util.db.dbutil import RedisDb
 from page_object.chezhu.chezhu_common.main_tab_chezhu import MainTabCheZhu
 from page_object.chezhu.chezhu_login.login_chezhu import LoginCheZhu
 from util.driver.driver_operation import DriverOperation
 from util.driver.driver import AppUiDriver
+from page_object.chezhu.chezhu_common.notification_chezhu import NotificationCheZhu
 
 
 class TestLoginUnregister(unittest.TestCase):
@@ -25,10 +27,9 @@ class TestLoginUnregister(unittest.TestCase):
 
         self.mobile = config['mobile_unregister']
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
-        self.main_page = MainTabCheZhu(self.driver).activity
         self.driver_tool = DriverOperation(self.driver)
+        RedisDb().del_key(name='CHK_ONE_DAY_LOGIN', key='all')  # 清除当日APP登录设备记录
         self.driver.reset()
-
         pass
 
     def tearDown(self):
@@ -38,11 +39,12 @@ class TestLoginUnregister(unittest.TestCase):
 
     def test_bvt_login_unregister(self):
         """未认证司机登录"""
+        NotificationCheZhu(self.driver).guide_page()
         self.driver_tool.getScreenShot('login_unregister_chezhu')
         LoginCheZhu(self.driver).user_login(self.mobile)
         self.driver_tool.getScreenShot('login_unregister_chezhu')
-        activity = self.driver_tool.get_activity()
-        self.assertEqual(self.main_page, activity)  # 检查登录操作后页面activity是否切换为主列表页
+        activity = MainTabCheZhu(self.driver).wait_main_page()
+        self.assertTrue(activity)  # 检查登录操作后页面activity是否切换为主列表页
 
 
 if __name__ == '__main__':
