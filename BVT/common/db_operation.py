@@ -63,7 +63,6 @@ class DbOperation(object):
     def delete_wallet_driver(self, mobile):
         sql_select = 'SELECT id from YD_APP_MYBANK_OPEN_ACCOUNT where mobile =\'{0}\''.format(mobile)
         ids = self.db.execute_select_many_record(sql_select)
-        print(ids)
         if ids:
             for id in ids:
                 sql_del = 'DELETE FROM `YD_APP_MYBANK_OPEN_ACCOUNT` WHERE id=\'{0}\' '.format(id[0])

@@ -27,6 +27,7 @@ class TestWaybillConfirm(unittest.TestCase):
         # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
         self.mobile = config['mobile_register']
         self.driver = AppUiDriver(app_package, app_activity).get_driver()  # 获取appium driver
+        DbOperation().delete_waybill_driver(self.mobile)  # 删除已有运单
         CreateWayBill(self.mobile).saveWayBill()  # 创建运单
         self.driver_tools = DriverOperation(self.driver)
         self.driver.start_activity(app_activity=app_activity, app_package=app_package)  # 重启应用

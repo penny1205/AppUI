@@ -41,6 +41,6 @@ class AppUiDriver(object):
 
 
 if __name__ == '__main__':
-    driver = AppUiDriver(appPackage='com.luchang.lcgc', appActivity='.main.SplashActivity').app_ui_driver()
+    driver = AppUiDriver(appPackage='com.mustang', appActivity='.account.SplashActivity').app_ui_driver()
     driver.start_activity()
     print(driver.current_activity)

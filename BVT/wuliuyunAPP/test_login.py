@@ -22,7 +22,7 @@ class TestLogin(unittest.TestCase):
         config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
         app_package = config['appPackage_wuliuyun']
         app_activity = config['appActivity_wuliuyun']
-        # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
+        AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
 
         self.user = config['username_wuliuyun']
         self.password = config['password_wuliuyun']

@@ -1,7 +1,7 @@
 ### device config ###
 platformName: Android
-platformVersion: 6.0.1
-deviceName: ad6decf
+platformVersion: 5.1.1
+deviceName: 892ae83d
 
 ### chezhu app ###
 appPackage_chezhu: com.mustang

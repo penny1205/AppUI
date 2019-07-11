@@ -25,7 +25,7 @@ class TestArriveConfirmWaybill(unittest.TestCase):
         app_activity = config['appActivity_wuliuyun']
         # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
         self.driver_mobile = config['employ_driver_mobile']
-        self.confirm_amt = '0.8'
+        self.confirm_amt = '8'
         self.confirm_info = '到达确认自动化备注'
         self.driver = AppUiDriver(appPackage=app_package, appActivity=app_activity).get_driver()
         self.driver_tool = DriverOperation(self.driver)

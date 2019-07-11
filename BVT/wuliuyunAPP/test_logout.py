@@ -32,6 +32,7 @@ class TestLogout(unittest.TestCase):
 
     def tearDown(self):
         """测试环境重置"""
+        self.driver.quit()
         self.logger.info('########################### TestLogout END ###########################')
         pass
 

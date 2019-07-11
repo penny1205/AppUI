@@ -48,6 +48,7 @@ class DBUtil(object):
         """执行sql语句：select,返回结果只包含一条数据"""
         self.logger.info('query:{0}'.format(query))
         try:
+            self.connect.ping(reconnect=True)
             cur = self.connect.cursor()
             cur.execute(query)
             # self.connect.close()
@@ -64,6 +65,7 @@ class DBUtil(object):
         """执行sql语句：select，返回结果包含多条数据"""
         self.logger.info('query:{0}'.format(query))
         try:
+            self.connect.ping(reconnect=True)
             cur = self.connect.cursor()
             cur.execute(query)
             data = cur.fetchall()
@@ -79,6 +81,7 @@ class DBUtil(object):
         """执行sql语句：insert,返回插入数据的主键id"""
         self.logger.info('query:{0}'.format(query))
         try:
+            self.connect.ping(reconnect=True)
             conn = self.connect
             cur = self.connect.cursor()
             cur.execute(query)

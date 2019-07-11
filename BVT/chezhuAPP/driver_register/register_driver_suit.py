@@ -7,6 +7,7 @@ from util.file.fileutil import FileUtil
 from util.driver.driver import AppUiDriver
 import unittest
 from BVT.chezhuAPP.driver_register.test_login_register_chezhu import TestLoginRegister
+from BVT.chezhuAPP.test_logout_chezhu import TestLogout
 from util.unittest.unittestutil import UnitTestUtil
 
 
@@ -22,7 +23,7 @@ class RegisterDriverCaseSuite(object):
     def case_suite_register(self):
         test_suite = unittest.makeSuite(TestLoginRegister)
         test_suite.addTests(UnitTestUtil().discover_pattern(FileUtil.getProjectObsPath() + '/BVT/chezhuAPP/driver_register/test_case', 'test*.py'))
-        # test_suite.addTest(TestLoginRegister('test_bvt_login_register'))
+        test_suite.addTest(TestLogout('test_bvt_logout'))
         # test_suit = test_suit + UnitTestUtil().discover_pattern(
         #     FileUtil.getProjectObsPath() + '/BVT/chezhuAPP/driver_register/test_case', 'test*.py')
         return test_suite

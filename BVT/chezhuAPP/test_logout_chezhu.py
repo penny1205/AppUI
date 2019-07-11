@@ -33,6 +33,7 @@ class TestLogout(unittest.TestCase):
     def tearDown(self):
         """测试环境重置"""
         RedisDb().del_key(name='CHK_ONE_DAY_LOGIN', key='all')
+        self.driver.quit()
         self.logger.info('########################### TestLogout END ###########################')
         pass
 

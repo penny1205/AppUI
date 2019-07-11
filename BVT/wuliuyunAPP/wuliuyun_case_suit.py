@@ -15,20 +15,17 @@ class WuliuyunCaseSuit(object):
     # 物流云APP-BVT自动化case集合
     def __init__(self):
         self.logger = Log()
-        config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
-        app_package = config['appPackage_wuliuyun']
-        app_activity = config['appActivity_wuliuyun']
-        AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
+        # config = ReadYaml(FileUtil.getProjectObsPath() + '/config/config.yaml').getValue()
+        # app_package = config['appPackage_wuliuyun']
+        # app_activity = config['appActivity_wuliuyun']
+        # AppUiDriver(appPackage=app_package, appActivity=app_activity).app_ui_driver()
 
     def case_suite(self):
         test_suite = unittest.makeSuite(TestLogin)
         test_suite.addTest(
             UnitTestUtil().discover_pattern(FileUtil.getProjectObsPath() + '/BVT/wuliuyunAPP/test_case', 'test*.py'))
         test_suite.addTest(unittest.makeSuite(TestLogout))
-        # test_suite.addTest(TestLoginRegister('test_bvt_login_register'))
-        # test_suit = test_suit + UnitTestUtil().discover_pattern(
-        #     FileUtil.getProjectObsPath() + '/BVT/chezhuAPP/driver_register/test_case', 'test*.py')
-        print(test_suite)
+        # print(test_suite)
         return test_suite
 
 
